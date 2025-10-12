@@ -4,7 +4,6 @@ A modern, full-featured Django web application for user profile management with 
 
 ![Django](https://img.shields.io/badge/Django-4.2+-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Status](https://img.shields.io/badge/Status-Production-brightgreen.svg)
 
 ## ✨ Features
