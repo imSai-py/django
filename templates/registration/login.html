@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - User Profile Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 1rem;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .links {
+            text-align: center;
+        }
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .errorlist {
+            color: #e74c3c;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem 0;
+        }
+        .non-field-errors {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome Back</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <div class="links">
+            <a href="{% url 'password_reset' %}">Forgot password?</a><br>
+            <a href="{% url 'register' %}">Create an account</a>
+        </div>
+    </div>
+</body>
+</html>
