@@ -246,7 +246,6 @@ We welcome contributions! Please follow these steps:
 If you have any questions or need help:
 
 - 📧 Email: sailakshman212005@gmail.com
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/user-profile-manager/issues)
 - 📖 Documentation: [Django Docs](https://docs.djangoproject.com/)
 
 ## 🔄 Future Enhancements
