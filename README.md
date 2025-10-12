@@ -245,6 +245,7 @@ We welcome contributions! Please follow these steps:
 If you have any questions or need help:
 
 - 📧 Email: sailakshman212005@gmail.com
+- 🆘 issue: https://github.com/imSai-py/django/issues
 - 📖 Documentation: [Django Docs](https://docs.djangoproject.com/)
 
 ## 🔄 Future Enhancements
