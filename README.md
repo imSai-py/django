@@ -240,15 +240,12 @@ We welcome contributions! Please follow these steps:
 - Update documentation as needed
 - Ensure responsive design works on all devices
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙋‍♂️ Support
 
 If you have any questions or need help:
 
-- 📧 Email: your.email@example.com
+- 📧 Email: sailakshman212005@gmail.com
 - 🐛 Issues: [GitHub Issues](https://github.com/yourusername/user-profile-manager/issues)
 - 📖 Documentation: [Django Docs](https://docs.djangoproject.com/)
 
