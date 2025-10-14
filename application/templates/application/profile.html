@@ -139,8 +139,22 @@
         .btn:hover {
             transform: translateY(-2px);
         }
-        .btn-secondary {
-            background: #6c757d;
+        .logout-btn {
+            width: 100%;
+            max-width: 200px;
+            height: 45px;
+            background: #dc3545;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .logout-btn:hover {
+            background: #c82333;
         }
         .button-group {
             display: flex;
@@ -243,12 +257,16 @@
                 {% endfor %}
                 <div class="button-group">
                     <button type="submit" class="btn">Update Profile</button>
-                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-secondary">Logout</button>
-                    </form>
                 </div>
             </form>
+
+            <!-- Logout form separate from file upload form -->
+            <div style="margin-top: 2rem; text-align: center;">
+                <form method="post" action="{% url 'logout' %}" style="display: inline-block;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn" onclick="console.log('Logout clicked')">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 

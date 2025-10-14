@@ -15,8 +15,16 @@
 
             <form method="post" action="{% url 'login' %}" novalidate>
                 {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                <div class="error-messages">
+                    {% for error in form.non_field_errors %}
+                        <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
         <div class="form-row">
-          <label for="id_username">Username</label>
           <div class="input-wrap">
             {{ form.username }}
             <span class="icon"><img src="{% static 'icons/user.svg' %}" alt="username icon"></span>
@@ -24,18 +32,23 @@
         </div>
 
         <div class="form-row">
-          <label for="id_password">Password</label>
           <div class="input-wrap">
             {{ form.password }}
             <span class="icon"><img src="{% static 'icons/lock.svg' %}" alt="password icon"></span>
           </div>
-        </div>                <div class="form-row">
-                    <button class="btn" type="submit">Sign in</button>
-                </div>
+        </div>
 
-                <div class="form-row small muted">
-                    <a href="{% url 'password_reset' %}">Forgot password?</a>
-                </div>
+        <div class="form-row remember-row">
+          <label class="remember-label">
+            <input type="checkbox" name="remember" id="id_remember">
+            Remember me
+          </label>
+          <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <div class="form-row">
+          <button class="btn" type="submit">Sign in</button>
+        </div>
             </form>
 
             <p class="small muted">Don't have an account? <a href="{% url 'register' %}">Register</a></p>

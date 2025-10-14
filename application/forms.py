@@ -37,15 +37,20 @@ class ProfileForm(forms.ModelForm):
         return photo
 
 class LoginForm(AuthenticationForm):
+    error_messages = {
+        'invalid_login': 'Please enter a correct username and password',
+        
+    }
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({
-            'placeholder': 'Enter username',
+            'placeholder': 'Username',
             'class': 'input-field',
             'id': 'id_username'
         })
         self.fields['password'].widget.attrs.update({
-            'placeholder': 'Enter password',
+            'placeholder': 'Password',
             'class': 'input-field',
             'id': 'id_password'
         })

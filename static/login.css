@@ -37,18 +37,28 @@ body:before{
   transform:skewY(-4deg);
 }
 .container-card{position:relative;z-index:5;width:420px;max-width:92%;}
+.login-card{
+  width: 420px;  
+  background: var(--card-bg);
+  border-radius:14px;
+  padding:20px 45px 20px 20px;
+  border: 3px solid rgba(255, 255, 255, .2);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+}
 .glass-card{
   background: var(--card-bg);
   border-radius:14px;
   padding:36px 36px 28px 36px;
-  border:1px solid var(--card-border);
-  box-shadow: 0 8px 40px rgba(10,8,20,0.4);
+  border:2px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0px 10px rgba(0,0,0,.2);
   backdrop-filter: blur(10px) saturate(120%);
 }
 .glass-card h1{margin:0 0 18px 0;text-align:center;font-size:34px;letter-spacing:0.5px}
 .input-wrap{position:relative;margin-bottom:16px}
 .input-wrap input[type=text],.input-wrap input[type=password]{
-  width:100%;padding:14px 44px;border-radius:40px;border:1px solid rgba(255,255,255,0.12);
+  width:100%;padding: 20px 45px 20px 20px;border-radius:40px;border:1px solid rgba(255,255,255,0.12);
   background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--accent);
   font-size:15px;outline:none;transition:all .18s ease;
 }
@@ -59,9 +69,54 @@ body:before{
 .row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .row-between .remember{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
 .forgot{color:var(--muted);text-decoration:none;font-size:14px}
-.btn-login{display:block;width:100%;padding:14px;border-radius:40px;background:#fff;color:#2b0b61;border:0;font-weight:600;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(43,11,97,0.18)}
+.remember-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.remember-label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;cursor:pointer}
+.remember-label input[type="checkbox"]{width:16px;height:16px;accent-color:#fff}
+.forgot-link{color:#fff;text-decoration:none;font-size:14px;font-weight:500}
+.forgot-link:hover{color:#e0e0e0}
+.btn {
+  width: 100%;
+  height: 45px;
+  background:#fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  animation: buttonGlow 2s ease-in-out infinite;
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1), 0 0 30px rgba(107, 46, 214, 0.6), 0 0 50px rgba(107, 46, 214, 0.3);
+  }
+  33% {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1), 0 0 35px rgba(123, 63, 224, 0.7), 0 0 60px rgba(123, 63, 224, 0.4);
+  }
+  66% {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1), 0 0 30px rgba(155, 89, 182, 0.6), 0 0 50px rgba(155, 89, 182, 0.3);
+  }
+}
 .small-note{text-align:center;margin-top:14px;color:rgba(255,255,255,0.8);font-size:14px}
 .small-note a{color:#fff;font-weight:700}
+.muted{color: var(--muted)}
+.muted a{color: #fff; text-decoration: none; font-weight: 500; transition: color 0.2s ease}
+.muted a:hover{color: #e0e0e0}
+.error-messages{margin-bottom: 20px}
+.error-message{
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  margin-bottom: 8px;
+}
 
 /* responsive */
 @media (max-width:420px){.glass-card{padding:26px 20px}.glass-card h1{font-size:28px}}
