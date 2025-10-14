@@ -1,4 +1,4 @@
-# 🎨 User Profile Manager
+# 🎨 Django User Profile Manager
 
 A modern, full-featured Django web application for user profile management with beautiful UI, secure authentication, and comprehensive profile customization.
 
@@ -56,8 +56,8 @@ Before running this project, make sure you have:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/user-profile-manager.git
-cd user-profile-manager
+git clone https://github.com/imSai-py/django.git
+cd django
 ```
 
 ### 2. Create Virtual Environment
@@ -117,7 +117,7 @@ Visit `http://127.0.0.1:8000/` in your browser!
 ## 📁 Project Structure
 
 ```
-user-profile-manager/
+django/
 ├── project/                 # Main Django project
 │   ├── settings.py         # Django settings
 │   ├── urls.py            # Main URL configuration
@@ -136,8 +136,10 @@ user-profile-manager/
 ├── templates/
 │   └── registration/       # Auth templates
 │       ├── login.html
-│       └── logged_out.html
+│       ├── logged_out.html
+│       └── password_reset_form.html
 ├── media/                  # User uploaded files
+│   └── uploads/           # Profile photos and other media
 ├── static/                 # Static files (CSS, JS, images)
 ├── db.sqlite3             # SQLite database
 ├── manage.py              # Django management script
@@ -248,8 +250,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you have any questions or need help:
 
-- 📧 Email: your.email@example.com
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/user-profile-manager/issues)
+- 🌐 Website: [Django User Profile Manager](https://imSai-py.github.io/django-profile-manager/)
+- 📧 Email: imSai-py@github.com
+- 🐛 Issues: [GitHub Issues](https://github.com/imSai-py/django/issues)
 - 📖 Documentation: [Django Docs](https://docs.djangoproject.com/)
 
 ## 🔄 Future Enhancements

@@ -1,0 +1,67 @@
+/* Login page styles inspired by the provided purple glass UI */
+:root{
+  --bg-top:#6b2ed6;
+  --bg-mid:#7b3fe0;
+  --bg-bottom:#3b0f60;
+  --card-bg: rgba(255,255,255,0.06);
+  --card-border: rgba(255,255,255,0.12);
+  --accent: #ffffff;
+  --muted: rgba(255,255,255,0.8);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg,var(--bg-top) 0%, var(--bg-mid) 50%, var(--bg-bottom) 100%);
+  /* background image override if available */
+  background-image: url('/static/images/login-bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  color:var(--accent);
+  -webkit-font-smoothing:antialiased;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;
+}
+/* star field */
+body:before{
+  content:"";position:absolute;inset:0;background:
+    radial-gradient(#fff 1px, transparent 1px) 10px 20px/120px 120px,
+    radial-gradient(#fff 1px, transparent 1px) 60px 80px/200px 200px;
+  opacity:0.08;mix-blend-mode:screen;pointer-events:none;
+}
+.mountains{position:absolute;left:0;right:0;bottom:0;height:45vh;background:
+  linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);}
+.mountains:after{content:"";position:absolute;left:-10%;right:-10%;bottom:0;height:100%;
+  background: radial-gradient(circle at 10% 80%, rgba(0,0,0,0.16), transparent 20%),
+    linear-gradient(180deg, rgba(59,15,96,0.6), rgba(20,4,40,1));
+  transform:skewY(-4deg);
+}
+.container-card{position:relative;z-index:5;width:420px;max-width:92%;}
+.glass-card{
+  background: var(--card-bg);
+  border-radius:14px;
+  padding:36px 36px 28px 36px;
+  border:1px solid var(--card-border);
+  box-shadow: 0 8px 40px rgba(10,8,20,0.4);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+.glass-card h1{margin:0 0 18px 0;text-align:center;font-size:34px;letter-spacing:0.5px}
+.input-wrap{position:relative;margin-bottom:16px}
+.input-wrap input[type=text],.input-wrap input[type=password]{
+  width:100%;padding:14px 44px;border-radius:40px;border:1px solid rgba(255,255,255,0.12);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--accent);
+  font-size:15px;outline:none;transition:all .18s ease;
+}
+.input-wrap input::placeholder{color:rgba(255,255,255,0.7)}
+.input-wrap .icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);opacity:0.95}
+.input-wrap .icon img{width:20px;height:20px;display:block}
+.input-wrap input:focus{border-color:rgba(255,255,255,0.3);box-shadow:0 4px 18px rgba(102,126,234,0.12)}
+.row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.row-between .remember{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+.forgot{color:var(--muted);text-decoration:none;font-size:14px}
+.btn-login{display:block;width:100%;padding:14px;border-radius:40px;background:#fff;color:#2b0b61;border:0;font-weight:600;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(43,11,97,0.18)}
+.small-note{text-align:center;margin-top:14px;color:rgba(255,255,255,0.8);font-size:14px}
+.small-note a{color:#fff;font-weight:700}
+
+/* responsive */
+@media (max-width:420px){.glass-card{padding:26px 20px}.glass-card h1{font-size:28px}}

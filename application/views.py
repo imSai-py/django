@@ -2,8 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import RegistrationForm, ProfileForm
+from django.contrib.auth.views import LoginView
+from .forms import RegistrationForm, ProfileForm, LoginForm
 from .models import UserProfile
+
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+    template_name = 'registration/login.html'
 
 def register(request):
     if request.method == 'POST':
@@ -16,6 +21,10 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, 'application/register.html', {'form': form})
+
+
+def home(request):
+    return render(request, 'home.html')
 
 @login_required
 def profile(request):

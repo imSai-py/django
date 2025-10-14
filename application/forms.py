@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 
@@ -35,3 +35,17 @@ class ProfileForm(forms.ModelForm):
             if not photo.name.lower().endswith(('.png', '.jpg', '.jpeg')):
                 raise forms.ValidationError("Only PNG/JPG images allowed.")
         return photo
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'placeholder': 'Enter username',
+            'class': 'input-field',
+            'id': 'id_username'
+        })
+        self.fields['password'].widget.attrs.update({
+            'placeholder': 'Enter password',
+            'class': 'input-field',
+            'id': 'id_password'
+        })
