@@ -106,11 +106,7 @@
             width: 100%;
         }
         .file-input-wrapper input[type="file"] {
-            opacity: 0;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+            display: none; /* hide the actual input to prevent overlay clicks */
         }
         .file-input-label {
             display: block;
@@ -235,10 +231,10 @@
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {% if field.name == 'photo' %}
                             <div class="file-input-wrapper">
-                                <div class="file-input-label">
-                                    Choose a new photo... (PNG/JPG, max 2MB)
-                                </div>
                                 {{ field }}
+                                <label class="file-input-label" for="{{ field.id_for_label }}">
+                                    Choose a new photo... (PNG/JPG, max 2MB)
+                                </label>
                             </div>
                         {% else %}
                             {{ field }}
@@ -280,8 +276,8 @@
         }
 
         // File input feedback
-        const fileInput = document.querySelector('input[type="file"]');
-        const fileLabel = document.querySelector('.file-input-label');
+    const fileInput = document.querySelector('input[name="photo"]');
+    const fileLabel = document.querySelector('label.file-input-label[for="' + (fileInput ? fileInput.id : '') + '"]');
         if (fileInput && fileLabel) {
             fileInput.addEventListener('change', function() {
                 if (this.files.length > 0) {
