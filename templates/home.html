@@ -1,50 +1,131 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Profile Manager</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}?v=20251016-1">
+    <style id="home-fallback-styles">
+      /* Fallback only if /static/home.css fails to load */
+      body{font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; margin:0; background:linear-gradient(180deg,#121026 0%, #2a164c 50%, #3b256d 100%); color:#fff}
+      .site-header{display:flex;justify-content:space-between;align-items:center;padding:16px}
+      .brand{display:flex;align-items:center;gap:10px}
+      .hero{max-width:1100px;margin:8vh auto;padding:0 20px}
+      .gradient-text{font-size:48px;margin:0}
+      .subtitle{opacity:.85}
+      .cta .btn{display:inline-block;margin-right:10px;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700}
+      .btn.primary{background:#fff;color:#2b0b61}
+      .btn.ghost{border:2px solid rgba(255,255,255,.6);color:#fff}
+      .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      .card{border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:18px;background:rgba(255,255,255,.06)}
+      @media(max-width:860px){.features{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="aurora"></div>
+    <header class="site-header">
+      <div class="brand">
+        <img class="logo" src="{% static 'icons/logo-user.svg' %}" alt="User logo" width="36" height="36" />
+        <div class="title">User Profile Manager</div>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'profile' %}">Profile</a>
+      </nav>
+    </header>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'home.css' %}">
-</head>
-<body>
+    <main class="hero">
+      <h1 class="gradient-text">Own your identity.<br/>Shape your presence.</h1>
+      <p class="subtitle">A sleek, secure, and modern way to manage your profile.</p>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Pricing</a>
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-          </div>
+      <div class="cta">
+        {% if user.is_authenticated %}
+          <a class="btn primary" href="{% url 'profile' %}">Go to your profile</a>
+          <a class="btn ghost" href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form-home').submit();">Logout</a>
+          <form id="logout-form-home" method="post" action="{% url 'logout' %}" style="display:none;">{% csrf_token %}</form>
+        {% else %}
+          <a class="btn primary" href="{% url 'register' %}">Get Started</a>
+          <a class="btn ghost" href="{% url 'login' %}">I already have an account</a>
+        {% endif %}
+      </div>
+
+      <div class="features">
+        <div class="card">
+          <h3>⚡ Dynamic Identity</h3>
+          <p>Shape your online persona that evolves with you — always fresh, always you.</p>
+        </div>
+        <div class="card">
+          <h3>🔒 Secure Auth</h3>
+          <p>Powered by Django auth with sensible defaults.</p>
+        </div>
+        <div class="card">
+          <h3>🖼️ Rich Profiles</h3>
+          <p>Upload photos, edit bios, and personalize your page.</p>
         </div>
       </div>
-    </nav>
+    </main>
 
-    <!-- Page Heading -->
-    <div class="container mt-5 text-center">
-    <h1>Welcome to Django User Profile Manager</h1>
-    <p class="lead">Quick links to get started</p>
-    <p>
-      <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-      <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
-      <a href="{% url 'profile' %}" class="btn btn-success">Your Profile</a>
-    </p>
-    </div>
+    <footer class="site-footer">
+      <span>Made with using Django</span>
+    </footer>
+    <script>
+      // Remove fallback styles if main CSS loaded (checks a custom var we set in home.css root)
+      (function(){
+        const fb = document.getElementById('home-fallback-styles');
+        const hasVar = getComputedStyle(document.documentElement).getPropertyValue('--bg1');
+        if(fb && hasVar){ fb.parentNode.removeChild(fb); }
+      })();
+      // Subtle parallax for aurora
+      (function(){
+        const layer = document.querySelector('.aurora');
+        if(!layer) return;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        let tx = 0, ty = 0, cx = 0, cy = 0, raf = null, autoT = 0;
+        const lerp = (a,b,t)=>a+(b-a)*t;
+        function onMove(e){
+          const x = (e.clientX / window.innerWidth) - 0.5;
+          const y = (e.clientY / window.innerHeight) - 0.5;
+          tx = x * 14; // max translate
+          ty = y * 10;
+          if(!raf) raf = requestAnimationFrame(tick);
+        }
+        function tick(){
+          if(prefersReduced){ layer.style.transform = 'none'; cancelAnimationFrame(raf); raf=null; return; }
+          cx = lerp(cx, tx, 0.06);
+          cy = lerp(cy, ty, 0.06);
+          layer.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+          raf = Math.abs(cx-tx) < 0.1 && Math.abs(cy-ty) < 0.1 ? null : requestAnimationFrame(tick);
+        }
+        if(!coarsePointer){
+          window.addEventListener('mousemove', onMove, {passive:true});
+        } else {
+          // gentle auto drift on touch devices
+          const drift = ()=>{
+            if(prefersReduced){ layer.style.transform = 'none'; return; }
+            autoT += 0.006;
+            tx = Math.sin(autoT) * 8; ty = Math.cos(autoT*0.8) * 6;
+            if(!raf) raf = requestAnimationFrame(tick);
+            requestAnimationFrame(drift);
+          };
+          drift();
+        }
+      })();
 
-  <!-- Optional content removed from landing page -->
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+      // Reveal cards on scroll
+      (function(){
+        const cards = document.querySelectorAll('.card');
+        if(!('IntersectionObserver' in window) || !cards.length){
+          cards.forEach(c=>c.classList.add('in-view'));
+          return;
+        }
+        const io = new IntersectionObserver((entries)=>{
+          for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target);} }
+        }, {threshold: .15});
+        cards.forEach(c=>io.observe(c));
+      })();
+    </script>
+  </body>
+ </html>
