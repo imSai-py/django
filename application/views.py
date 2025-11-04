@@ -29,6 +29,11 @@ def home(request):
 @login_required
 def profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
+    return render(request, 'application/profile.html', {'profile': profile})
+
+@login_required
+def update_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -37,5 +42,5 @@ def profile(request):
             return redirect('profile')
     else:
         form = ProfileForm(instance=profile)
-    return render(request, 'application/profile.html', {'form': form, 'profile': profile})
+    return render(request, 'application/update.html', {'form': form, 'profile': profile})
 
