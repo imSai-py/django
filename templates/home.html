@@ -208,54 +208,88 @@
     transform: scale(1.3);
   }
 
-  /* Mobile Override */
+  /* Mobile Override - ACTIVATED */
   @media (max-width: 768px) {
-    .ring {
-      border: none;
-      animation: none;
-      transform: none;
-      position: static;
-      width: auto;
-      height: auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .center-hub {
-      position: static;
-      margin-bottom: 20px;
-      box-shadow: none;
-      background: transparent;
+    #user-starfield {
+      display: block !important;
     }
 
     .orbit-container {
-      flex-direction: column;
-      height: auto;
-      padding: 40px 20px;
+      height: 100vh;
+      perspective: 800px;
+      overflow: hidden;
     }
 
-    .orbiter,
-    .orbiter-2 {
-      position: static;
-      transform: none !important;
-      width: auto;
-      height: auto;
+    /* Scale down the entire ring system to fit phone width */
+    .ring {
+      /* Reset positioning for calc updates below */
     }
 
-    .planet {
-      position: static;
-      margin: 0;
-      animation: none !important;
+    .ring-1 {
+      width: 280px;
+      height: 280px;
+      animation: spin 30s linear infinite;
     }
 
-    #user-starfield {
+    .ring-2 {
+      width: 360px;
+      height: 360px;
+      animation: spin 45s linear infinite reverse;
+    }
+
+    .ring-3 {
       display: none;
     }
 
-    /* Hide stars on mobile for performance/clarity */
+    /* Hide large outer ring on mobile */
+
+    /* Recalculate planet positions for smaller rings */
+
+    /* Ring 1 (Inner) - Radius ~140px */
+    .orbiter:nth-child(1) {
+      transform: rotate(0deg) translateX(140px) rotate(0deg);
+    }
+
+    .orbiter:nth-child(2) {
+      transform: rotate(120deg) translateX(140px) rotate(-120deg);
+    }
+
+    .orbiter:nth-child(3) {
+      transform: rotate(240deg) translateX(140px) rotate(-240deg);
+    }
+
+    /* Ring 2 (Outer) - Radius ~180px */
+    .orbiter-2:nth-child(1) {
+      transform: rotate(45deg) translateX(180px) rotate(-45deg);
+    }
+
+    .orbiter-2:nth-child(2) {
+      transform: rotate(165deg) translateX(180px) rotate(-165deg);
+    }
+
+    .orbiter-2:nth-child(3) {
+      transform: rotate(285deg) translateX(180px) rotate(-285deg);
+    }
+
+    /* Center Hub Adjustments */
+    .center-hub {
+      padding: 24px;
+      width: 90%;
+      background: rgba(15, 12, 41, 0.4);
+      /* More transparent */
+    }
+
+    .planet {
+      width: 50px;
+      height: 50px;
+      margin-left: -25px;
+      margin-top: -25px;
+    }
+
+    /* Ensure animations are visible */
+    .ring {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
   }
 </style>
 {% endblock %}
@@ -264,7 +298,7 @@
 <div class="orbit-container">
 
   <!-- Dynamic Starfield for Total Users -->
-  <div id="user-starfield" style="position: absolute; w idth: 100%; height: 100%; pointer-events: none; z-index: 0;">
+  <div id="user-starfield" style="position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
   </div>
 
   <!-- Inner Ring (3 slots) -->
