@@ -1,131 +1,394 @@
+{% extends 'base.html' %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>User Profile Manager</title>
-    <link rel="stylesheet" href="{% static 'home.css' %}?v=20251016-1">
-    <style id="home-fallback-styles">
-      /* Fallback only if /static/home.css fails to load */
-      body{font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; margin:0; background:linear-gradient(180deg,#121026 0%, #2a164c 50%, #3b256d 100%); color:#fff}
-      .site-header{display:flex;justify-content:space-between;align-items:center;padding:16px}
-      .brand{display:flex;align-items:center;gap:10px}
-      .hero{max-width:1100px;margin:8vh auto;padding:0 20px}
-      .gradient-text{font-size:48px;margin:0}
-      .subtitle{opacity:.85}
-      .cta .btn{display:inline-block;margin-right:10px;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700}
-      .btn.primary{background:#fff;color:#2b0b61}
-      .btn.ghost{border:2px solid rgba(255,255,255,.6);color:#fff}
-      .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-      .card{border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:18px;background:rgba(255,255,255,.06)}
-      @media(max-width:860px){.features{grid-template-columns:1fr}}
-    </style>
-  </head>
-  <body>
-    <div class="aurora"></div>
-    <header class="site-header">
-      <div class="brand">
-        <img class="logo" src="{% static 'icons/logo-user.svg' %}" alt="User logo" width="36" height="36" />
-        <div class="title">User Profile Manager</div>
-      </div>
-      <nav class="nav">
-        <a href="{% url 'register' %}">Register</a>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'profile' %}">Profile</a>
-      </nav>
-    </header>
 
-    <main class="hero">
-      <h1 class="gradient-text">Own your identity.<br/>Shape your presence.</h1>
-      <p class="subtitle">A sleek, secure, and modern way to manage your profile.</p>
+{% block title %}Universe | Profile Manager{% endblock %}
 
-      <div class="cta">
-        {% if user.is_authenticated %}
-          <a class="btn primary" href="{% url 'profile' %}">Go to your profile</a>
-          <a class="btn ghost" href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form-home').submit();">Logout</a>
-          <form id="logout-form-home" method="post" action="{% url 'logout' %}" style="display:none;">{% csrf_token %}</form>
+{% block extra_head %}
+<style>
+  /* Orbit System Layout */
+  .orbit-container {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    /* Takes up most of the screen */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+  }
+
+  /* Central Content */
+  .center-hub {
+    z-index: 20;
+    text-align: center;
+    background: rgba(15, 12, 41, 0.3);
+    backdrop-filter: blur(8px);
+    /* Subtle blur behind text to improve readability */
+    padding: 40px;
+    border-radius: 50%;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Orbit Rings */
+  .ring {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Very faint connection lines */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* Let clicks pass through */
+  }
+
+  .ring-1 {
+    width: 400px;
+    height: 400px;
+    animation: spin 40s linear infinite;
+  }
+
+  .ring-2 {
+    width: 650px;
+    height: 650px;
+    animation: spin 60s linear infinite reverse;
+  }
+
+  .ring-3 {
+    width: 900px;
+    height: 900px;
+    border-color: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Outer decorative ring */
+
+  /* Orbiting Items */
+  .planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    margin-left: -30px;
+    /* Center offset */
+    margin-top: -30px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(124, 77, 255, 0.3);
+    display: flex;
+    /* Center image */
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .planet img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .planet-placeholder {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* Counter-rotate to keep images upright */
+  .ring-1 .planet {
+    animation: counter-spin 40s linear infinite;
+  }
+
+  .ring-2 .planet {
+    animation: counter-spin 60s linear infinite reverse;
+  }
+
+  /* Coloring planets slightly differently */
+  .orbiter .planet {
+    background: rgba(103, 58, 183, 0.2);
+  }
+
+  .orbiter-2 .planet {
+    background: rgba(33, 150, 243, 0.1);
+  }
+
+  /* Placement positions on the ring */
+  .orbiter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .orbiter-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  /* Fix: Applying translations */
+  .orbiter:nth-child(1) {
+    transform: rotate(0deg) translateX(200px) rotate(0deg);
+  }
+
+  .orbiter:nth-child(2) {
+    transform: rotate(120deg) translateX(200px) rotate(-120deg);
+  }
+
+  .orbiter:nth-child(3) {
+    transform: rotate(240deg) translateX(200px) rotate(-240deg);
+  }
+
+  /* For Ring 2 */
+  .orbiter-2:nth-child(1) {
+    transform: rotate(45deg) translateX(325px) rotate(-45deg);
+  }
+
+  .orbiter-2:nth-child(2) {
+    transform: rotate(165deg) translateX(325px) rotate(-165deg);
+  }
+
+  .orbiter-2:nth-child(3) {
+    transform: rotate(285deg) translateX(325px) rotate(-285deg);
+  }
+
+  /* Animations */
+  @keyframes spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  @keyframes counter-spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+
+  /* Tooltip */
+  .planet-tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .planet:hover .planet-tooltip {
+    opacity: 1;
+  }
+
+  .planet:hover {
+    z-index: 100;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 30px var(--accent-secondary);
+    transform: scale(1.3);
+  }
+
+  /* Mobile Override */
+  @media (max-width: 768px) {
+    .ring {
+      border: none;
+      animation: none;
+      transform: none;
+      position: static;
+      width: auto;
+      height: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .center-hub {
+      position: static;
+      margin-bottom: 20px;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .orbit-container {
+      flex-direction: column;
+      height: auto;
+      padding: 40px 20px;
+    }
+
+    .orbiter,
+    .orbiter-2 {
+      position: static;
+      transform: none !important;
+      width: auto;
+      height: auto;
+    }
+
+    .planet {
+      position: static;
+      margin: 0;
+      animation: none !important;
+    }
+
+    #user-starfield {
+      display: none;
+    }
+
+    /* Hide stars on mobile for performance/clarity */
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="orbit-container">
+
+  <!-- Dynamic Starfield for Total Users -->
+  <div id="user-starfield" style="position: absolute; w idth: 100%; height: 100%; pointer-events: none; z-index: 0;">
+  </div>
+
+  <!-- Inner Ring (3 slots) -->
+  <div class="ring ring-1">
+    {% for profile in latest_profiles|slice:":3" %}
+    <div class="orbiter">
+      <div class="planet">
+        {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}">
         {% else %}
-          <a class="btn primary" href="{% url 'register' %}">Get Started</a>
-          <a class="btn ghost" href="{% url 'login' %}">I already have an account</a>
+        <div class="planet-placeholder">{{ profile.user.username|first|upper }}</div>
         {% endif %}
-      </div>
-
-      <div class="features">
-        <div class="card">
-          <h3>⚡ Dynamic Identity</h3>
-          <p>Shape your online persona that evolves with you — always fresh, always you.</p>
-        </div>
-        <div class="card">
-          <h3>🔒 Secure Auth</h3>
-          <p>Powered by Django auth with sensible defaults.</p>
-        </div>
-        <div class="card">
-          <h3>🖼️ Rich Profiles</h3>
-          <p>Upload photos, edit bios, and personalize your page.</p>
+        <div class="planet-tooltip">
+          {{ profile.user.username }}
         </div>
       </div>
-    </main>
+    </div>
+    {% endfor %}
+  </div>
 
-    <footer class="site-footer">
-      <span>Made with using Django</span>
-    </footer>
-    <script>
-      // Remove fallback styles if main CSS loaded (checks a custom var we set in home.css root)
-      (function(){
-        const fb = document.getElementById('home-fallback-styles');
-        const hasVar = getComputedStyle(document.documentElement).getPropertyValue('--bg1');
-        if(fb && hasVar){ fb.parentNode.removeChild(fb); }
-      })();
-      // Subtle parallax for aurora
-      (function(){
-        const layer = document.querySelector('.aurora');
-        if(!layer) return;
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-        let tx = 0, ty = 0, cx = 0, cy = 0, raf = null, autoT = 0;
-        const lerp = (a,b,t)=>a+(b-a)*t;
-        function onMove(e){
-          const x = (e.clientX / window.innerWidth) - 0.5;
-          const y = (e.clientY / window.innerHeight) - 0.5;
-          tx = x * 14; // max translate
-          ty = y * 10;
-          if(!raf) raf = requestAnimationFrame(tick);
-        }
-        function tick(){
-          if(prefersReduced){ layer.style.transform = 'none'; cancelAnimationFrame(raf); raf=null; return; }
-          cx = lerp(cx, tx, 0.06);
-          cy = lerp(cy, ty, 0.06);
-          layer.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-          raf = Math.abs(cx-tx) < 0.1 && Math.abs(cy-ty) < 0.1 ? null : requestAnimationFrame(tick);
-        }
-        if(!coarsePointer){
-          window.addEventListener('mousemove', onMove, {passive:true});
-        } else {
-          // gentle auto drift on touch devices
-          const drift = ()=>{
-            if(prefersReduced){ layer.style.transform = 'none'; return; }
-            autoT += 0.006;
-            tx = Math.sin(autoT) * 8; ty = Math.cos(autoT*0.8) * 6;
-            if(!raf) raf = requestAnimationFrame(tick);
-            requestAnimationFrame(drift);
-          };
-          drift();
-        }
-      })();
+  <!-- Outer Ring (Remaining slots) -->
+  <div class="ring ring-2">
+    {% for profile in latest_profiles|slice:"3:" %}
+    <div class="orbiter-2">
+      <div class="planet">
+        {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}">
+        {% else %}
+        <div class="planet-placeholder">{{ profile.user.username|first|upper }}</div>
+        {% endif %}
+        <div class="planet-tooltip">
+          {{ profile.user.username }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
 
-      // Reveal cards on scroll
-      (function(){
-        const cards = document.querySelectorAll('.card');
-        if(!('IntersectionObserver' in window) || !cards.length){
-          cards.forEach(c=>c.classList.add('in-view'));
-          return;
+    <!-- Add a "Planet You" placeholder to fill space if needed or encourage joining -->
+    {% if latest_profiles|length < 5 %} <div class="orbiter-2">
+      <a href="{% url 'register' %}" class="planet" style="text-decoration:none; border-style: dashed; opacity:0.6;">
+        <div class="planet-placeholder" style="font-size:1.5rem;">+</div>
+      </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Decorative 3rd Ring -->
+<div class="ring ring-3"></div>
+
+<!-- Central Hub -->
+<div class="center-hub">
+  <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 16px;">
+    Join the <span class="text-gradient">Orbit</span>
+  </h1>
+  <p class="hero-subtitle" style="margin-bottom: 24px; font-size: 1rem;">
+    Limitless travelers exploring the digital profile universe.
+  </p>
+
+  <div class="cta-group" style="display:flex; flex-direction: column; gap:12px; align-items: center;">
+    {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}" class="nav-btn primary" style="min-width: 160px; text-align: center;">
+      Launch Profile
+    </a>
+    {% else %}
+    <a href="{% url 'register' %}" class="nav-btn primary" style="min-width: 160px; text-align: center;">
+      Start Journey
+    </a>
+    <a href="{% url 'login' %}" style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">
+      Resume Session
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Generate Stars based on Total User Count
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('user-starfield');
+    // Get the count from Django, ensure it's a number
+    const userCount = {{ total_users|default: 0
+  }};
+  // We render at least 50 stars for effect even if 0 users, but let's be accurate (+50 ambient)
+  const ambientStars = 50;
+  const totalStars = Math.min(userCount + ambientStars, 400); // Cap at 400 for performance
+
+  for (let i = 0; i < totalStars; i++) {
+    const star = document.createElement('div');
+    // Random position inside the container
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    // Random size (distance effect)
+    const size = Math.random() * 2 + 1; // 1px to 3px
+    // Random animation speed for "twinkle"
+    const duration = Math.random() * 3 + 2;
+    const delay = Math.random() * 5;
+
+    star.style.cssText = `
+                position: absolute;
+                left: ${x}%;
+                top: ${y}%;
+                width: ${size}px;
+                height: ${size}px;
+                background: white;
+                border-radius: 50%;
+                opacity: ${Math.random() * 0.7 + 0.3};
+                animation: starFlicker ${duration}s infinite alternate ${delay}s;
+                box-shadow: 0 0 ${size}px rgba(255, 255, 255, 0.6);
+            `;
+    container.appendChild(star);
+  }
+    });
+
+  // Inject styles for stars
+  const starStyle = document.createElement('style');
+  starStyle.innerHTML = `
+        @keyframes starFlicker {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
-        const io = new IntersectionObserver((entries)=>{
-          for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target);} }
-        }, {threshold: .15});
-        cards.forEach(c=>io.observe(c));
-      })();
-    </script>
-  </body>
- </html>
+    `;
+  document.head.appendChild(starStyle);
+</script>
+{% endblock %}

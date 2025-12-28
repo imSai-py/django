@@ -1,0 +1,106 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Profile Manager{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'main.css' %}?v={% now 'U' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Background Animation -->
+    <div class="aurora-bg">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">
+            ProfileMgr
+        </a>
+
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+            <a href="{% url 'home' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+            <a href="{% url 'profile' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
+
+            <form method="post" action="{% url 'logout' %}" class="inline-form" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-btn">Logout</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
+            <a href="{% url 'register' %}" class="nav-btn primary">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+
+
+    <script>
+        // Auto-dismiss messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            const msgs = document.querySelectorAll('.message');
+            msgs.forEach(m => {
+                setTimeout(() => {
+                    m.style.opacity = '0';
+                    setTimeout(() => m.remove(), 300);
+                }, 5000);
+            });
+        });
+    </script>
+
+    {% block extra_scripts %}
+    <script>
+        // Parallax Effect for Aurora Background
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) - 0.5;
+            const y = (e.clientY / window.innerHeight) - 0.5;
+            const bg = document.querySelector('.aurora-bg');
+            if (bg) {
+                // Determine movement intensity (e.g. 30px)
+                // We use scale(1.1) in CSS to ensure no whitespace is exposed at edges
+                const moveX = x * 30;
+                const moveY = y * 30;
+                bg.style.transform = `scale(1.1) translate3d(${moveX}px, ${moveY}px, 0)`;
+            }
+        });
+    </script>
+    {% endblock %}
+</body>
+
+</html>

@@ -1,57 +1,255 @@
+{% extends 'base.html' %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Log in</title>
-        <link rel="stylesheet" href="{% static 'login.css' %}">
-    </head>
-    <body>
-        <div class="stars" aria-hidden="true"></div>
-        <div class="login-card" role="main" aria-labelledby="login-heading">
-            <h1 id="login-heading">Welcome back</h1>
-            <p class="muted">Sign in to continue</p>
 
-            <form method="post" action="{% url 'login' %}" novalidate>
-                {% csrf_token %}
-                
-                {% if form.non_field_errors %}
-                <div class="error-messages">
-                    {% for error in form.non_field_errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                
-        <div class="form-row">
-          <div class="input-wrap">
-            {{ form.username }}
-            <span class="icon"><img src="{% static 'icons/user.svg' %}" alt="username icon"></span>
-          </div>
-        </div>
+{% block title %}Access System | Profile Manager{% endblock %}
 
-        <div class="form-row">
-          <div class="input-wrap">
-            {{ form.password }}
-            <span class="icon"><img src="{% static 'icons/lock.svg' %}" alt="password icon"></span>
-          </div>
-        </div>
+{% block extra_head %}
+<style>
+  /* Tech Terminal Theme (Shared with Register) */
+  .holo-terminal {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(124, 77, 255, 0.3);
+    background: rgba(13, 12, 34, 0.85);
+    /* Slightly darker for login focus */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
 
-        <div class="form-row remember-row">
-          <label class="remember-label">
-            <input type="checkbox" name="remember" id="id_remember">
-            Remember me
-          </label>
-          <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
-        </div>
+  /* Decoration: Corner Brackets */
+  .holo-terminal::before,
+  .holo-terminal::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-secondary);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
 
-        <div class="form-row">
-          <button class="btn" type="submit">Sign in</button>
-        </div>
-            </form>
+  .holo-terminal::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+  }
 
-            <p class="small muted">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-        </div>
-    </body>
-</html>
+  .holo-terminal::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+  }
+
+  .holo-terminal:hover::before,
+  .holo-terminal:hover::after {
+    width: 40px;
+    height: 40px;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px var(--accent-primary);
+  }
+
+  /* Scanline Effect */
+  .scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, var(--accent-primary), transparent);
+    opacity: 0.5;
+    animation: scan 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 0 20px var(--accent-primary);
+  }
+
+  @keyframes scan {
+    0% {
+      top: -20%;
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 0.8;
+    }
+
+    90% {
+      opacity: 0.8;
+    }
+
+    100% {
+      top: 120%;
+      opacity: 0;
+    }
+  }
+
+  /* Tech Inputs */
+  .tech-input {
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(124, 77, 255, 0.2) !important;
+    color: #fff !important;
+    font-family: 'Inter', monospace;
+    padding-left: 20px;
+    height: 50px;
+    /* Taller for login */
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .tech-input:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 20px rgba(124, 77, 255, 0.3), inset 0 0 10px rgba(124, 77, 255, 0.1) !important;
+    background: rgba(124, 77, 255, 0.1) !important;
+    transform: scale(1.02);
+  }
+
+  /* Glitch Text Effect on Hover */
+  .glitch-hover:hover {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+    color: var(--accent-primary);
+  }
+
+  @keyframes glitch {
+    0% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(-2px, 2px);
+    }
+
+    40% {
+      transform: translate(-2px, -2px);
+    }
+
+    60% {
+      transform: translate(2px, 2px);
+    }
+
+    80% {
+      transform: translate(2px, -2px);
+    }
+
+    100% {
+      transform: translate(0);
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Local Starfield -->
+<div id="login-stars"
+  style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;"></div>
+
+<div class="glass-card narrow holo-terminal" style="max-width: 450px; padding: 50px 40px;">
+
+  <!-- Decorative Scanline -->
+  <div class="scanline"></div>
+
+  <div class="text-center mb-4">
+    <div style="font-size: 3rem; margin-bottom: 16px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));">🔓</div>
+    <h2 class="glitch-hover"
+      style="cursor: default; font-family: monospace; letter-spacing: -1px; text-transform: uppercase; font-size: 1.8rem;">
+      Access <span class="text-gradient">System</span>
+    </h2>
+    <p
+      style="color: var(--text-secondary); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px;">
+      Secure Gateway // v2.0
+    </p>
+  </div>
+
+  <form method="post" action="{% url 'login' %}" novalidate id="loginForm">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="message error mb-4"
+      style="text-align:center; font-family:monospace; font-size:0.9rem; border-color:var(--error); background:rgba(255,82,82,0.1);">
+      {% for error in form.non_field_errors %}
+      ACCESS DENIED: {{ error|upper }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="form-group" style="margin-bottom: 24px;">
+      <label class="form-label" for="id_username"
+        style="font-family: monospace; color: var(--accent-primary); font-size: 0.8rem;">USER_ID</label>
+      {{ form.username }}
+    </div>
+
+    <div class="form-group" style="margin-bottom: 32px;">
+      <label class="form-label" for="id_password"
+        style="font-family: monospace; color: var(--accent-primary); font-size: 0.8rem;">ACCESS_KEY</label>
+      {{ form.password }}
+    </div>
+
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; font-size:0.85rem; font-family: monospace;">
+      <label
+        style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-secondary); transition:color 0.3s;">
+        <input type="checkbox" name="remember" id="id_remember" style="accent-color:var(--accent-primary);">
+        MAINTAIN_SESSION
+      </label>
+      <a href="{% url 'password_reset' %}"
+        style="color:var(--text-muted); text-decoration:none; transition: color 0.3s;">
+        RECOVER_KEY?
+      </a>
+    </div>
+
+    <button type="submit" class="nav-btn primary btn-block"
+      style="height: 56px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; border-radius: 4px; border: 1px solid var(--accent-secondary);">
+      Authenticate
+    </button>
+  </form>
+
+  <p class="text-center mt-4"
+    style="margin-top: 32px; font-size: 0.85rem; font-family: monospace; color: var(--text-muted);">
+    NO_CREDENTIALS? <a href="{% url 'register' %}"
+      style="color: var(--accent-primary); font-weight: 700; margin-left: 8px;">INITIALIZE NEW ID</a>
+  </p>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Apply Tech Styles
+    const inputs = document.querySelectorAll('#loginForm input[type="text"], #loginForm input[type="password"]');
+    inputs.forEach(i => {
+      i.classList.add('tech-input');
+      i.classList.remove('form-input'); // Prevent base style clash
+
+      // Thematic Placeholders
+      if (i.name === 'username') i.placeholder = 'ENTER USERNAME...';
+      if (i.name === 'password') i.placeholder = 'ENTER PASSWORD...';
+    });
+
+    // Dynamic Starfield (Slower, calmer for login)
+    const starContainer = document.getElementById('login-stars');
+    for (let j = 0; j < 80; j++) {
+      const s = document.createElement('div');
+      const size = Math.random() * 2;
+      s.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                width: ${size}px; height: ${size}px;
+                background: rgba(255,255,255,0.3);
+                border-radius: 50%;
+                animation: float ${Math.random() * 10 + 10}s infinite linear;
+            `;
+      starContainer.appendChild(s);
+    }
+
+    // Float Keyframe
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes float { 
+            0% { transform: translateY(0); opacity: 0.3; } 
+            50% { opacity: 0.8; } 
+            100% { transform: translateY(-100px); opacity: 0.3; } 
+        }`;
+    document.head.appendChild(style);
+  });
+</script>
+{% endblock %}

@@ -1,379 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profile - User Profile Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends 'base.html' %}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            line-height: 1.6;
-        }
+{% block title %}Update Profile | Profile Manager{% endblock %}
 
-        .update-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: slideIn 0.6s ease-out;
-        }
+{% block content %}
+<div class="glass-card narrow" style="max-width: 600px;">
+    <h2 class="text-center mb-4">Edit Profile</h2>
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
 
-        .update-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .update-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .update-subtitle {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 1rem;
-            font-weight: 400;
-        }
-
-        .current-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(102, 126, 234, 0.2);
-            margin: 0 auto 1.5rem;
-            display: block;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .avatar-placeholder {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 2px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 1px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 12px;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.5;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 0.875rem 1rem;
-            border: 2px dashed rgba(102, 126, 234, 0.3);
-            border-radius: 12px;
-            background: rgba(102, 126, 234, 0.05);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #667eea;
-            font-weight: 500;
-        }
-
-        .file-input-label:hover {
-            background: rgba(102, 126, 234, 0.08);
-            border-color: rgba(102, 126, 234, 0.5);
-        }
-
-        .error-list {
-            list-style: none;
-            color: #e74c3c;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-
-        .success-message {
-            background: rgba(46, 204, 113, 0.1);
-            color: #27ae60;
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            font-weight: 500;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 0.875rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: rgba(108, 117, 125, 0.1);
-            color: #6c757d;
-            border: 2px solid rgba(108, 117, 125, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(108, 117, 125, 0.2);
-            border-color: rgba(108, 117, 125, 0.4);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .update-container {
-                padding: 2rem;
-            }
-
-            .update-title {
-                font-size: 1.75rem;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-        }
-
-        /* Subtle animations */
-        .form-group {
-            animation: fadeInUp 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="update-container">
-        <div class="update-header">
-            {% if profile.photo %}
-                <img src="{{ profile.photo.url }}" alt="Current Profile Photo" class="current-avatar">
-            {% else %}
-                <div class="avatar-placeholder">
-                    {{ user.username|first|upper }}
-                </div>
+        <!-- Reuse form styling via simpler loop or manual field render if needed for specific layout -->
+        {% for field in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <small style="display:block; margin-top:4px; color:var(--text-muted);">{{ field.help_text }}</small>
             {% endif %}
-            <h1 class="update-title">Update Profile</h1>
-            <p class="update-subtitle">Make changes to your profile information</p>
-        </div>
-
-        <div class="form-section">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="success-message">{{ message }}</div>
-                {% endfor %}
+            {% if field.errors %}
+            <div style="color:var(--error); margin-top:4px;">
+                {% for error in field.errors %}{{ error }}{% endfor %}
+            </div>
             {% endif %}
-
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% if field.name == 'photo' %}
-                            <div class="file-input-wrapper">
-                                {{ field }}
-                                <label class="file-input-label" for="{{ field.id_for_label }}">
-                                    Choose a new photo... (PNG/JPG, max 2MB)
-                                </label>
-                            </div>
-                        {% elif field.name == 'bio' %}
-                            <textarea class="form-input form-textarea" name="{{ field.name }}" id="{{ field.id_for_label }}" placeholder="{{ field.label }}">{{ field.value|default_if_none:"" }}</textarea>
-                        {% else %}
-                            <input type="{{ field.field.widget.input_type }}" class="form-input" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default_if_none:'' }}" placeholder="{{ field.label }}">
-                        {% endif %}
-                        {% if field.errors %}
-                            <ul class="error-list">
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                        {% if field.help_text %}
-                            <small style="color: #666; font-size: 0.8rem; margin-top: 0.25rem; display: block;">{{ field.help_text }}</small>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-
-                <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                    <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
         </div>
-    </div>
+        {% endfor %}
 
-    <script>
-        // Character counter for bio
-        const textarea = document.querySelector('textarea[name="bio"]');
-        if (textarea) {
-            textarea.addEventListener('input', function() {
-                this.value = this.value.slice(0, 500);
-            });
-        }
+        <div style="display: flex; gap: 16px; margin-top: 32px;">
+            <button type="submit" class="nav-btn primary" style="flex: 1;">Save Changes</button>
+            <a href="{% url 'profile' %}" class="nav-btn"
+                style="flex: 1; text-align: center; background: rgba(255,255,255,0.05);">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
 
-        // File input feedback
-        const fileInput = document.querySelector('input[name="photo"]');
-        const fileLabel = document.querySelector('label.file-input-label[for="' + (fileInput ? fileInput.id : '') + '"]');
-        if (fileInput && fileLabel) {
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    fileLabel.textContent = this.files[0].name;
-                } else {
-                    fileLabel.textContent = 'Choose a new photo... (PNG/JPG, max 2MB)';
-                }
-            });
-        }
-
-        // Add subtle hover effects
-        document.querySelectorAll('.form-group').forEach((group, index) => {
-            group.style.animationDelay = `${index * 0.1 + 0.1}s`;
-        });
-    </script>
-</body>
-</html>
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(i => i.classList.add('form-input'));
+    });
+</script>
+{% endblock %}

@@ -24,7 +24,13 @@ def register(request):
 
 
 def home(request):
-    return render(request, 'home.html')
+    # Fetch 5 newest members for the "Community Pulse" section
+    latest_profiles = UserProfile.objects.select_related('user').order_by('-created_at')[:5]
+    total_users = UserProfile.objects.count()
+    return render(request, 'home.html', {
+        'latest_profiles': latest_profiles,
+        'total_users': total_users
+    })
 
 @login_required
 def profile(request):
