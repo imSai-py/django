@@ -146,6 +146,8 @@
     transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
     transform: scale(0.9) translateX(50px);
     z-index: 1;
+    overflow: hidden;
+    /* Contain overlays and long text */
 
     /* Inherit the Tech Card Styling */
     background: rgba(15, 20, 35, 0.9);
@@ -174,81 +176,14 @@
     background-position: 0 0, 0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%;
   }
 
-  .profile-slide.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1) translateX(0);
-    z-index: 10;
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
-  }
-
-  /* Click Zones */
-  .nav-zone {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 40%;
-    z-index: 20;
-    cursor: pointer;
-  }
-
-  .nav-zone:hover {
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  .nav-zone.left {
-    left: 0;
-  }
-
-  .nav-zone.right {
-    right: 0;
-  }
-
-  .nav-hint {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-    color: rgba(212, 175, 55, 0.3);
-    pointer-events: none;
-    transition: all 0.3s;
-  }
-
-  .left .nav-hint {
-    left: 20px;
-  }
-
-  .right .nav-hint {
-    right: 20px;
-  }
-
-  .nav-zone:hover .nav-hint {
-    color: rgba(212, 175, 55, 1);
-    transform: translateY(-50%) scale(1.2);
-  }
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin: 0 auto 25px;
-    border: 3px solid var(--b-color);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-    object-fit: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--b-color);
-    background: rgba(0, 0, 0, 0.5);
-  }
-
+  /* ... */
   .profile-name {
     font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 10px;
     color: #fff;
+    word-break: break-all;
+    /* Prevent overflow */
   }
 
   .profile-meta {
