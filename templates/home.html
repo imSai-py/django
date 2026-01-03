@@ -277,6 +277,24 @@
      are now handled in static/main.css per user request.
     */
 
+    /* Fix Hero Text Overflow */
+    .hero {
+      width: 100% !important;
+      padding: 80px 20px 40px !important;
+      box-sizing: border-box !important;
+    }
+
+    .hero h1 {
+      font-size: 2rem !important;
+      word-wrap: break-word !important;
+    }
+
+    .hero p {
+      font-size: 0.95rem !important;
+      word-wrap: break-word !important;
+      padding: 0 10px !important;
+    }
+
     /* Slider Container Logic */
     .slider-container {
       width: 100% !important;
@@ -298,7 +316,10 @@
     }
 
     .profile-name {
-      font-size: 1.5rem;
+      font-size: 1.2rem !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+      max-width: 100% !important;
     }
 
     .nav-hint {
