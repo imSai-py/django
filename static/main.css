@@ -428,6 +428,8 @@ a {
 @media (max-width: 768px) {
     .navbar {
         padding: 1rem 1.5rem;
+        overflow: visible !important;
+        /* Critical: Prevent clipping of fixed-position mobile menu */
     }
 
     .mobile-menu-toggle {
