@@ -50,3 +50,11 @@ def update_profile(request):
         form = ProfileForm(instance=profile)
     return render(request, 'application/update.html', {'form': form, 'profile': profile})
 
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        messages.success(request, 'Your account has been deleted successfully.')
+        return redirect('home')
+    return redirect('profile')

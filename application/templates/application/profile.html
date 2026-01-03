@@ -387,6 +387,15 @@
                 Sign Out
             </button>
         </form>
+
+        <form method="post" action="{% url 'delete_account' %}" style="margin-top: 20px;">
+            {% csrf_token %}
+            <button type="submit" class="btn"
+                style="width: 200px; background: rgba(255, 0, 0, 0.2); border: 1px solid red; color: red;"
+                onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                Delete Account
+            </button>
+        </form>
     </div>
 
 </div>
