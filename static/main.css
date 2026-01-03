@@ -411,7 +411,9 @@ a {
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 200;
+    z-index: 10000;
+    /* Higher than nav-links (9999) to stay clickable */
+    position: relative;
 }
 
 .mobile-menu-toggle span {
