@@ -437,7 +437,9 @@ a {
         top: 0;
         right: 0;
         transform: translateX(100%);
-        /* Completely hide off-screen */
+        /* Move off-screen */
+        visibility: hidden;
+        /* Ensure it's not clickable/visible */
         width: 70%;
         height: 100vh;
         background: rgba(15, 12, 41, 0.95);
@@ -445,7 +447,7 @@ a {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: transform 0.4s ease;
+        transition: transform 0.4s ease, visibility 0.4s;
         box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
         z-index: 150;
     }
@@ -453,6 +455,7 @@ a {
     .nav-links.active {
         transform: translateX(0);
         /* Slide in */
+        visibility: visible;
     }
 
     /* Mobile Menu Items Styling */
@@ -494,19 +497,5 @@ a {
 
     .hero-title {
         font-size: 2.2rem;
-    }
-
-    /* Mobile Menu Items Styling */
-    .nav-links .nav-link {
-        font-size: 1.5rem;
-        margin: 10px 0;
-    }
-
-    .nav-links .nav-btn {
-        width: 80%;
-        text-align: center;
-        padding: 12px;
-        font-size: 1.2rem;
-        margin-top: 10px;
     }
 }
