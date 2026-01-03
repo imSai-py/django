@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}Profile Manager{% endblock %}</title>
 
     <!-- Google Fonts -->
@@ -120,9 +120,29 @@
             const navLinks = document.querySelector('.nav-links');
 
             if (toggle && navLinks) {
-                toggle.addEventListener('click', () => {
+                // Toggle menu on hamburger click
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     navLinks.classList.toggle('active');
                     toggle.classList.toggle('open');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (navLinks.classList.contains('active') &&
+                        !navLinks.contains(e.target) &&
+                        !toggle.contains(e.target)) {
+                        navLinks.classList.remove('active');
+                        toggle.classList.remove('open');
+                    }
+                });
+
+                // Close menu when a link is clicked
+                navLinks.querySelectorAll('a, button').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        toggle.classList.remove('open');
+                    });
                 });
             }
         });

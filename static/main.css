@@ -33,9 +33,10 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    /* Prevent global horizontal scroll */
 }
 
 body {
@@ -45,6 +46,7 @@ body {
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
+    /* Prevent body overflow */
     position: relative;
     -webkit-font-smoothing: antialiased;
 }
@@ -409,7 +411,9 @@ a {
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 200;
+    z-index: 10000;
+    /* Higher than nav-links (9999) to stay clickable */
+    position: relative;
 }
 
 .mobile-menu-toggle span {
@@ -425,11 +429,15 @@ a {
 /* Mobile Breakpoint */
 @media (max-width: 768px) {
     .navbar {
-        padding: 1rem 1.5rem;
+        padding: 0.8rem 1rem;
+        overflow: visible !important;
+        /* Critical: Prevent clipping of fixed-position mobile menu */
     }
 
     .mobile-menu-toggle {
         display: flex;
+        margin-right: 15px;
+        /* Move away from edge */
     }
 
     .nav-links {
@@ -437,24 +445,25 @@ a {
         top: 0;
         right: 0;
         transform: translateX(100%);
-        /* Move off-screen */
         visibility: hidden;
-        /* Ensure it's not clickable/visible */
         width: 70%;
+        max-width: 280px;
         height: 100vh;
-        background: rgba(15, 12, 41, 0.95);
+        background: rgba(15, 12, 41, 0.98);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 20px;
         transition: transform 0.4s ease, visibility 0.4s;
         box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
-        z-index: 150;
+        z-index: 9999;
+        display: flex;
     }
 
     .nav-links.active {
         transform: translateX(0);
-        /* Slide in */
         visibility: visible;
     }
 
@@ -497,5 +506,50 @@ a {
 
     .hero-title {
         font-size: 2.2rem;
+    }
+}
+
+/* --- MOBILE RESPONSIVE FIX (USER REQUESTED) --- */
+@media screen and (max-width: 768px) {
+
+    /* 1. Stack the main layout vertically */
+    .main-content {
+        display: flex !important;
+        flex-direction: column !important;
+        /* Forces top-to-bottom stacking */
+        width: 100% !important;
+        height: auto !important;
+        padding-top: 60px !important;
+        /* Adds space for the navbar */
+        overflow-x: hidden !important;
+        /* Prevents horizontal scrolling */
+    }
+
+    /* 2. Fix the Hero Section (Left side text) */
+    .hero {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px !important;
+        text-align: center !important;
+        /* Centers text on mobile */
+        margin-bottom: 30px !important;
+        /* Adds space between text and profiles */
+    }
+
+    /* 3. Fix the Profiles/Login Section (Right side) */
+    .profiles-container {
+        width: 90% !important;
+        /* Makes it fit the screen */
+        margin: 0 auto !important;
+        /* Centers it horizontally */
+        display: block !important;
+        /* Ensures it's visible */
+        padding-bottom: 40px !important;
+    }
+
+    /* Optional: Fix the Navbar if it's squished */
+    .navbar {
+        width: 100% !important;
+        padding: 10px 20px !important;
     }
 }
