@@ -124,7 +124,7 @@
     background: #f0f0f0;
   }
 
-  /* Profiles Grid */
+  /* Profiles Grid - Horizontal Carousel (Desktop & Mobile) */
   .profiles-container {
     max-width: 1200px;
     margin: 0 auto 80px;
@@ -142,13 +142,44 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
+  /* Flex Carousel for all screens */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     gap: 30px;
+    padding-bottom: 30px;
+    /* Space for desktop scrollbar */
+    padding-top: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #D4AF37 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Desktop Scrollbar Styling */
+  .grid::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .grid::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .grid::-webkit-scrollbar-thumb {
+    background-color: #D4AF37;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .grid::-webkit-scrollbar-thumb:hover {
+    background-color: #fff;
   }
 
   .profile-card {
+    min-width: 300px;
+    /* Fixed width for desktop */
+    max-width: 300px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
     padding: 30px;
@@ -159,10 +190,13 @@
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
+    scroll-snap-align: center;
+    flex-shrink: 0;
+    /* Prevent shrinking */
   }
 
   .profile-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     background: white;
   }
@@ -174,7 +208,6 @@
     object-fit: cover;
     margin: 0 auto 20px;
     border: 3px solid #D4AF37;
-    /* Metallic Gold */
     background: #f8f9fa;
     display: flex;
     align-items: center;
@@ -236,31 +269,27 @@
       padding: 0 15px;
       margin-bottom: 30px;
       overflow: hidden;
-      /* Clean edges */
     }
 
-    /* Horizontal Carousel Logic */
+    /* Mobile adjustments for Carousel */
     .grid {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
       gap: 15px;
       padding-bottom: 20px;
       -webkit-overflow-scrolling: touch;
-      grid-template-columns: unset;
-      padding-left: 5px;
+      margin: 0 -15px;
+      padding-left: 15px;
+      padding-right: 15px;
     }
 
     .grid::-webkit-scrollbar {
       display: none;
+      /* Hide scrollbar on mobile */
     }
 
     .profile-card {
       min-width: 260px;
       max-width: 260px;
       padding: 20px;
-      scroll-snap-align: center;
-      margin-right: 0;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
