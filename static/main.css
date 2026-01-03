@@ -429,13 +429,15 @@ a {
 /* Mobile Breakpoint */
 @media (max-width: 768px) {
     .navbar {
-        padding: 1rem 1.5rem;
+        padding: 0.8rem 1rem;
         overflow: visible !important;
         /* Critical: Prevent clipping of fixed-position mobile menu */
     }
 
     .mobile-menu-toggle {
         display: flex;
+        margin-right: 5px;
+        /* Prevent cut-off at edge */
     }
 
     .nav-links {
