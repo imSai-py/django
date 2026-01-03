@@ -88,13 +88,30 @@
         /* The requested glowing border */
         animation: cardEntry 0.8s ease-out forwards, borderPulse 3s infinite alternate;
         position: relative;
+        box-sizing: border-box;
+        /* Critical for mobile */
+        margin: 20px auto;
+        /* Center the card */
     }
 
     /* Mobile Responsiveness */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+            /* Less body padding on mobile */
+            padding-top: 70px;
+            /* Account for navbar */
+        }
+
         .register-card {
-            padding: 20px;
+            width: 90%;
+            /* Fit within viewport with margin */
+            padding: 25px 20px;
+            /* Reduced padding */
             max-width: 100%;
+            /* Allow it to shrink */
+            margin: 10px auto;
+            /* Tighter margins */
         }
 
         .register-header h1 {
