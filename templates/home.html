@@ -316,8 +316,8 @@
 
       <h3 class="profile-name">{{ profile.user.username }}</h3>
       <div class="profile-meta">Joined {{ profile.user.date_joined|date:"F Y" }}</div>
-      <div style="margin-top:20px; font-size:0.8rem; color:var(--b-color); opacity:0.6; letter-spacing:1px;">TAP SIDES
-        TO NAVIGATE</div>
+      <div style="margin-top:20px; font-size:0.8rem; color:var(--b-color); opacity:0.6; letter-spacing:1px;">SWIPE OR
+        TAP SIDES</div>
     </div>
     {% empty %}
     <div style="text-align:center; color:white; padding:40px;">No profiles found yet.</div>
@@ -343,6 +343,33 @@
 
     // Add active to new
     slides[currentIndex].classList.add('active');
+  }
+
+  // Swipe Support
+  const slider = document.getElementById('profileCarousel');
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  if (slider) {
+    slider.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    slider.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+  }
+
+  function handleSwipe() {
+    if (touchStartX - touchEndX > 50) {
+      // Swiped Left -> Next Slide
+      changeSlide(1);
+    }
+    if (touchEndX - touchStartX > 50) {
+      // Swiped Right -> Prev Slide
+      changeSlide(-1);
+    }
   }
 </script>
 
