@@ -198,18 +198,75 @@
     font-weight: 500;
   }
 
-  /* Responsive */
+  /* Responsive Design Improvements */
   @media (max-width: 768px) {
-    .hero h1 {
-      font-size: 2.5rem;
+    body {
+      padding-top: 80px;
+      /* Adjust for fixed navbar */
     }
 
     .hero {
-      padding: 80px 20px 40px;
+      padding: 40px 20px 40px;
+      max-width: 100%;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      /* Smaller heading */
+      margin-bottom: 15px;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      margin-bottom: 30px;
+      padding: 0 10px;
+      /* Prevent text touching edges */
+    }
+
+    .cta-button {
+      padding: 14px 35px;
+      /* Slightly smaller button */
+      font-size: 1rem;
+      width: 100%;
+      /* Full width button on mobile */
+      max-width: 280px;
+      /* But not too wide */
+      box-sizing: border-box;
+    }
+
+    .profiles-container {
+      padding: 0 15px;
+      margin-bottom: 40px;
     }
 
     .grid {
       grid-template-columns: 1fr;
+      /* Stack cards vertically */
+      gap: 20px;
+    }
+
+    .profile-card {
+      padding: 20px;
+      /* Compact padding */
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+    }
+  }
+
+  /* Extra small devices */
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: 1.8rem;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      font-size: 2rem;
     }
   }
 </style>
