@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Account Not Found{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Professional Blue/Glow Theme */
+    :root {
+        --glow-color: #00f3ff;
+        /* Cyan/Electric Blue Glow */
+        --bg-overlay: rgba(0, 0, 0, 0.75);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --text-color: #ffffff;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: 'Inter', sans-serif;
+        background: url("{% static 'register_bg.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding-top: 80px;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    /* Hide the base template aurora background */
+    .aurora-bg {
+        display: none !important;
+    }
+
+    /* Navbar Customization */
+    .navbar {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(0, 243, 255, 0.1) !important;
+        backdrop-filter: none !important;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .logo,
+    .nav-link {
+        color: #fff !important;
+        text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    }
+
+    .nav-btn {
+        background: transparent !important;
+        border: 1px solid var(--glow-color) !important;
+        color: var(--glow-color) !important;
+    }
+
+    /* Message Card */
+    .msg-card {
+        background: rgba(0, 10, 20, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        width: 100%;
+        max-width: 500px;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        border: 2px solid var(--glow-color);
+        text-align: center;
+        animation: cardEntry 0.8s ease-out forwards;
+    }
+
+    @keyframes cardEntry {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        color: #fff;
+        font-size: 2rem;
+        margin-bottom: 15px;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .btn-action {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="msg-card">
+    <h1>Account Not Found</h1>
+    <p>
+        We couldn't find an account associated with this Google email.
+        <br>
+        Please create an account to get started.
+    </p>
+
+    <a href="{% url 'register' %}" class="btn-action">
+        Create Account
+    </a>
+</div>
+{% endblock %}
