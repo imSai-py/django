@@ -436,8 +436,8 @@ a {
 
     .mobile-menu-toggle {
         display: flex;
-        margin-right: 5px;
-        /* Prevent cut-off at edge */
+        margin-right: 15px;
+        /* Move away from edge */
     }
 
     .nav-links {
