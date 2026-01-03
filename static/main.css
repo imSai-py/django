@@ -33,9 +33,10 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    /* Prevent global horizontal scroll */
 }
 
 body {
@@ -45,6 +46,7 @@ body {
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
+    /* Prevent body overflow */
     position: relative;
     -webkit-font-smoothing: antialiased;
 }
