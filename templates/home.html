@@ -176,29 +176,87 @@
     background-color: #fff;
   }
 
+  /* Modern "Four Line/Bracket" Border Card */
   .profile-card {
     min-width: 300px;
-    /* Fixed width for desktop */
     max-width: 300px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
+    background: rgba(15, 20, 35, 0.8);
+    /* Darker tech background */
+    backdrop-filter: blur(10px);
+    border-radius: 4px;
+    /* Sharper corners for tech look */
     padding: 30px;
     text-align: center;
-    color: #333;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #fff;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
     scroll-snap-align: center;
     flex-shrink: 0;
-    /* Prevent shrinking */
+    transition: all 0.3s ease;
+
+    /* The 4-Line Border (Corner Brackets) using Gradients */
+    --b-color: #00f3ff;
+    /* Cyan Glow */
+    --b-width: 2px;
+    --b-size: 25px;
+    /* Length of the bracket lines */
+
+    background-image:
+      /* Top Left */
+      linear-gradient(to right, var(--b-color), var(--b-color)),
+      linear-gradient(to bottom, var(--b-color), var(--b-color)),
+      /* Top Right */
+      linear-gradient(to left, var(--b-color), var(--b-color)),
+      linear-gradient(to bottom, var(--b-color), var(--b-color)),
+      /* Bottom Right */
+      linear-gradient(to left, var(--b-color), var(--b-color)),
+      linear-gradient(to top, var(--b-color), var(--b-color)),
+      /* Bottom Left */
+      linear-gradient(to right, var(--b-color), var(--b-color)),
+      linear-gradient(to top, var(--b-color), var(--b-color));
+
+    background-repeat: no-repeat;
+    background-size:
+      var(--b-size) var(--b-width), var(--b-width) var(--b-size),
+      /* TL */
+      var(--b-size) var(--b-width), var(--b-width) var(--b-size),
+      /* TR */
+      var(--b-size) var(--b-width), var(--b-width) var(--b-size),
+      /* BR */
+      var(--b-size) var(--b-width), var(--b-width) var(--b-size);
+    /* BL */
+
+    background-position:
+      0 0, 0 0,
+      /* TL */
+      100% 0, 100% 0,
+      /* TR */
+      100% 100%, 100% 100%,
+      /* BR */
+      0 100%, 0 100%;
+    /* BL */
+
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.05);
   }
 
   .profile-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    background: white;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+    background-color: rgba(15, 20, 35, 0.95);
+
+    /* Expand brackets on hover */
+    --b-size: 100%;
+    /* Connects the lines to form full border */
+    transition: background-size 0.5s ease;
+  }
+
+  /* Update text colors inside card to match dark theme */
+  .profile-card .profile-name {
+    color: #fff;
+  }
+
+  .profile-card .profile-meta {
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .profile-avatar {
