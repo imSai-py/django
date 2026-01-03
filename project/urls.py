@@ -21,6 +21,8 @@ from application.views import CustomLoginView
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import re_path
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +36,11 @@ urlpatterns = [
     path('accounts/reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('accounts/', include('allauth.urls')), # Django Allauth URLs
     path('', include('application.urls')),
+    
+    # Force serve media files in production (Render Free Tier)
+    # Note: These files are ephemeral and will be lost on redeploy
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
