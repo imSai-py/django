@@ -1,428 +1,259 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Universe | Profile Manager{% endblock %}
+{% block title %}Professional Profile Manager{% endblock %}
 
 {% block extra_head %}
 <style>
-  /* Orbit System Layout */
-  .orbit-container {
-    position: relative;
-    width: 100%;
-    height: 85vh;
-    /* Takes up most of the screen */
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1000px;
-  }
-
-  /* Central Content */
-  .center-hub {
-    z-index: 20;
-    text-align: center;
-    background: rgba(15, 12, 41, 0.3);
-    backdrop-filter: blur(8px);
-    /* Subtle blur behind text to improve readability */
-    padding: 40px;
-    border-radius: 50%;
-    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Orbit Rings */
-  .ring {
-    position: absolute;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    /* Very faint connection lines */
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    /* Let clicks pass through */
-  }
-
-  .ring-1 {
-    width: 400px;
-    height: 400px;
-    animation: spin 40s linear infinite;
-  }
-
-  .ring-2 {
-    width: 650px;
-    height: 650px;
-    animation: spin 60s linear infinite reverse;
-  }
-
-  .ring-3 {
-    width: 900px;
-    height: 900px;
-    border-color: rgba(255, 255, 255, 0.03);
-  }
-
-  /* Outer decorative ring */
-
-  /* Orbiting Items */
-  .planet {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60px;
-    height: 60px;
-    margin-left: -30px;
-    /* Center offset */
-    margin-top: -30px;
-    border-radius: 50%;
-    background: var(--glass-bg);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 15px rgba(124, 77, 255, 0.3);
-    display: flex;
-    /* Center image */
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    cursor: pointer;
-    pointer-events: auto;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .planet img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .planet-placeholder {
-    font-weight: 700;
+  /* Override Base Styles for this page */
+  body {
+    background: url("{% static 'home_bg.png' %}") no-repeat center center fixed !important;
+    background-size: cover !important;
+    font-family: 'Inter', sans-serif;
     color: #fff;
+    margin: 0;
+    min-height: 100vh;
   }
 
-  /* Counter-rotate to keep images upright */
-  .ring-1 .planet {
-    animation: counter-spin 40s linear infinite;
+  /* Hide the base template aurora background */
+  .aurora-bg {
+    display: none !important;
   }
 
-  .ring-2 .planet {
-    animation: counter-spin 60s linear infinite reverse;
+  /* Navbar Tweaks */
+  .navbar {
+    background: rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Coloring planets slightly differently */
-  .orbiter .planet {
-    background: rgba(103, 58, 183, 0.2);
+  .logo,
+  .nav-link {
+    color: white !important;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
 
-  .orbiter-2 .planet {
-    background: rgba(33, 150, 243, 0.1);
+  .nav-btn {
+    background: white !important;
+    color: #000 !important;
+    border: none !important;
+    font-weight: 600;
   }
 
-  /* Placement positions on the ring */
-  .orbiter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
+  .nav-link:hover {
+    opacity: 0.8;
   }
 
-  .orbiter-2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
+  /* Hero Section */
+  .hero {
+    text-align: center;
+    padding: 100px 20px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    /* animation: fadeIn 1s ease-out; Removed in favor of text-focus-in on elements */
   }
 
-  /* Fix: Applying translations */
-  .orbiter:nth-child(1) {
-    transform: rotate(0deg) translateX(200px) rotate(0deg);
+  .text-focus-in {
+    -webkit-animation: text-focus-in 1s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+    animation: text-focus-in 1s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
   }
 
-  .orbiter:nth-child(2) {
-    transform: rotate(120deg) translateX(200px) rotate(-120deg);
-  }
-
-  .orbiter:nth-child(3) {
-    transform: rotate(240deg) translateX(200px) rotate(-240deg);
-  }
-
-  /* For Ring 2 */
-  .orbiter-2:nth-child(1) {
-    transform: rotate(45deg) translateX(325px) rotate(-45deg);
-  }
-
-  .orbiter-2:nth-child(2) {
-    transform: rotate(165deg) translateX(325px) rotate(-165deg);
-  }
-
-  .orbiter-2:nth-child(3) {
-    transform: rotate(285deg) translateX(325px) rotate(-285deg);
-  }
-
-  /* Animations */
-  @keyframes spin {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
+  @-webkit-keyframes text-focus-in {
+    0% {
+      -webkit-filter: blur(12px);
+      filter: blur(12px);
+      opacity: 0;
     }
 
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
+    100% {
+      -webkit-filter: blur(0px);
+      filter: blur(0px);
+      opacity: 1;
     }
   }
 
-  @keyframes counter-spin {
-    from {
-      transform: rotate(0deg);
+  @keyframes text-focus-in {
+    0% {
+      -webkit-filter: blur(12px);
+      filter: blur(12px);
+      opacity: 0;
     }
 
-    to {
-      transform: rotate(-360deg);
+    100% {
+      -webkit-filter: blur(0px);
+      filter: blur(0px);
+      opacity: 1;
     }
   }
 
-  /* Tooltip */
-  .planet-tooltip {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    white-space: nowrap;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
 
-  .planet:hover .planet-tooltip {
-    opacity: 1;
+  .hero p {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    font-weight: 400;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
 
-  .planet:hover {
-    z-index: 100;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 30px var(--accent-secondary);
-    transform: scale(1.3);
+  .cta-button {
+    display: inline-block;
+    background: #fff;
+    color: #020111;
+    /* Dark Navy */
+    font-weight: 700;
+    padding: 18px 50px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    font-size: 1.1rem;
   }
 
-  /* Mobile Override - ACTIVATED */
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    background: #f0f0f0;
+  }
+
+  /* Profiles Grid */
+  .profiles-container {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 50px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    color: #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+  }
+
+  .profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    background: white;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    border: 3px solid #D4AF37;
+    /* Metallic Gold */
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #D4AF37;
+  }
+
+  .profile-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #2d3436;
+  }
+
+  .profile-meta {
+    color: #636e72;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  /* Responsive */
   @media (max-width: 768px) {
-    #user-starfield {
-      display: block !important;
+    .hero h1 {
+      font-size: 2.5rem;
     }
 
-    .orbit-container {
-      height: 100vh;
-      perspective: 800px;
-      overflow: hidden;
+    .hero {
+      padding: 80px 20px 40px;
     }
 
-    /* Scale down the entire ring system to fit phone width */
-    .ring {
-      /* Reset positioning for calc updates below */
-    }
-
-    .ring-1 {
-      width: 280px;
-      height: 280px;
-      animation: spin 30s linear infinite;
-    }
-
-    .ring-2 {
-      width: 360px;
-      height: 360px;
-      animation: spin 45s linear infinite reverse;
-    }
-
-    .ring-3 {
-      display: none;
-    }
-
-    /* Hide large outer ring on mobile */
-
-    /* Recalculate planet positions for smaller rings */
-
-    /* Ring 1 (Inner) - Radius ~140px */
-    .orbiter:nth-child(1) {
-      transform: rotate(0deg) translateX(140px) rotate(0deg);
-    }
-
-    .orbiter:nth-child(2) {
-      transform: rotate(120deg) translateX(140px) rotate(-120deg);
-    }
-
-    .orbiter:nth-child(3) {
-      transform: rotate(240deg) translateX(140px) rotate(-240deg);
-    }
-
-    /* Ring 2 (Outer) - Radius ~180px */
-    .orbiter-2:nth-child(1) {
-      transform: rotate(45deg) translateX(180px) rotate(-45deg);
-    }
-
-    .orbiter-2:nth-child(2) {
-      transform: rotate(165deg) translateX(180px) rotate(-165deg);
-    }
-
-    .orbiter-2:nth-child(3) {
-      transform: rotate(285deg) translateX(180px) rotate(-285deg);
-    }
-
-    /* Center Hub Adjustments */
-    .center-hub {
-      padding: 24px;
-      width: 90%;
-      background: rgba(15, 12, 41, 0.4);
-      /* More transparent */
-    }
-
-    .planet {
-      width: 50px;
-      height: 50px;
-      margin-left: -25px;
-      margin-top: -25px;
-    }
-
-    /* Ensure animations are visible */
-    .ring {
-      border-color: rgba(255, 255, 255, 0.2);
+    .grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="orbit-container">
+<div class="hero">
+  <h1 class="text-focus-in">Manage Your Professional Identity</h1>
+  <p class="text-focus-in" style="animation-delay: 0.2s;">Empowering professionals to connect, share, and grow. <br>The
+    simplest way to maintain your digital presence.</p>
 
-  <!-- Dynamic Starfield for Total Users -->
-  <div id="user-starfield" style="position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
-  </div>
-
-  <!-- Inner Ring (3 slots) -->
-  <div class="ring ring-1">
-    {% for profile in latest_profiles|slice:":3" %}
-    <div class="orbiter">
-      <div class="planet">
-        {% if profile.photo %}
-        <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}">
-        {% else %}
-        <div class="planet-placeholder">{{ profile.user.username|first|upper }}</div>
-        {% endif %}
-        <div class="planet-tooltip">
-          {{ profile.user.username }}
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <!-- Outer Ring (Remaining slots) -->
-  <div class="ring ring-2">
-    {% for profile in latest_profiles|slice:"3:" %}
-    <div class="orbiter-2">
-      <div class="planet">
-        {% if profile.photo %}
-        <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}">
-        {% else %}
-        <div class="planet-placeholder">{{ profile.user.username|first|upper }}</div>
-        {% endif %}
-        <div class="planet-tooltip">
-          {{ profile.user.username }}
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-
-    <!-- Add a "Planet You" placeholder to fill space if needed or encourage joining -->
-    {% if latest_profiles|length < 5 %} <div class="orbiter-2">
-      <a href="{% url 'register' %}" class="planet" style="text-decoration:none; border-style: dashed; opacity:0.6;">
-        <div class="planet-placeholder" style="font-size:1.5rem;">+</div>
-      </a>
-  </div>
+  {% if not user.is_authenticated %}
+  <a href="{% url 'register' %}" class="cta-button">Get Started Now</a>
+  {% else %}
+  <a href="{% url 'profile' %}" class="cta-button">Go to Dashboard</a>
   {% endif %}
 </div>
 
-<!-- Decorative 3rd Ring -->
-<div class="ring ring-3"></div>
+<div class="profiles-container">
+  <h2 class="section-title text-focus-in">Latest Members</h2>
 
-<!-- Central Hub -->
-<div class="center-hub">
-  <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 16px;">
-    Join the <span class="text-gradient">Orbit</span>
-  </h1>
-  <p class="hero-subtitle" style="margin-bottom: 24px; font-size: 1rem;">
-    Limitless travelers exploring the digital profile universe.
-  </p>
+  <div class="grid">
+    {% for profile in latest_profiles %}
+    <div class="profile-card">
+      {% if profile.photo %}
+      <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}" class="profile-avatar">
+      {% else %}
+      <div class="profile-avatar">
+        {{ profile.user.username|make_list|first|upper }}
+      </div>
+      {% endif %}
 
-  <div class="cta-group" style="display:flex; flex-direction: column; gap:12px; align-items: center;">
-    {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}" class="nav-btn primary" style="min-width: 160px; text-align: center;">
-      Launch Profile
-    </a>
-    {% else %}
-    <a href="{% url 'register' %}" class="nav-btn primary" style="min-width: 160px; text-align: center;">
-      Start Journey
-    </a>
-    <a href="{% url 'login' %}" style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">
-      Resume Session
-    </a>
-    {% endif %}
+      <h3 class="profile-name">{{ profile.user.username }}</h3>
+      <div class="profile-meta">Joined {{ profile.user.date_joined|date:"F Y" }}</div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1/-1; text-align: center; font-size: 1.2rem; opacity: 0.7;">
+      No profiles found yet. Be the first to join!
+    </div>
+    {% endfor %}
   </div>
-</div>
-
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-  // Generate Stars based on Total User Count
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('user-starfield');
-    // Get the count from Django, ensure it's a number
-    const userCount = {{ total_users|default: 0
-  }};
-  // We render at least 50 stars for effect even if 0 users, but let's be accurate (+50 ambient)
-  const ambientStars = 50;
-  const totalStars = Math.min(userCount + ambientStars, 400); // Cap at 400 for performance
-
-  for (let i = 0; i < totalStars; i++) {
-    const star = document.createElement('div');
-    // Random position inside the container
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    // Random size (distance effect)
-    const size = Math.random() * 2 + 1; // 1px to 3px
-    // Random animation speed for "twinkle"
-    const duration = Math.random() * 3 + 2;
-    const delay = Math.random() * 5;
-
-    star.style.cssText = `
-                position: absolute;
-                left: ${x}%;
-                top: ${y}%;
-                width: ${size}px;
-                height: ${size}px;
-                background: white;
-                border-radius: 50%;
-                opacity: ${Math.random() * 0.7 + 0.3};
-                animation: starFlicker ${duration}s infinite alternate ${delay}s;
-                box-shadow: 0 0 ${size}px rgba(255, 255, 255, 0.6);
-            `;
-    container.appendChild(star);
-  }
-    });
-
-  // Inject styles for stars
-  const starStyle = document.createElement('style');
-  starStyle.innerHTML = `
-        @keyframes starFlicker {
-            0% { opacity: 0.3; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
-    `;
-  document.head.appendChild(starStyle);
-</script>
+<!-- Disabling the aurora parallax script from base.html -->
 {% endblock %}

@@ -1,302 +1,393 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Personnel Record | Profile Manager{% endblock %}
+{% block title %}Profile | Professional Dashboard{% endblock %}
 
 {% block extra_head %}
 <style>
-    /* Shared Tech Terminal Theme */
-    .holo-terminal {
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(124, 77, 255, 0.3);
-        background: rgba(13, 12, 34, 0.9);
-        box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
+    /* Professional Blue/Glow Theme */
+    :root {
+        --glow-color: #00f3ff;
+        /* Cyan/Electric Blue Glow */
+        --bg-overlay: rgba(0, 0, 0, 0.75);
+        --card-bg: rgba(0, 10, 20, 0.6);
+        --text-color: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
     }
 
-    .holo-terminal::before,
-    .holo-terminal::after {
-        content: '';
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        border: 2px solid var(--accent-secondary);
-        transition: all 0.3s ease;
-        z-index: 10;
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: 'Inter', sans-serif;
+        background: url("{% static 'register_bg.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding-top: 100px;
+        /* Prevent navbar overlap */
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
     }
 
-    .holo-terminal::before {
+    /* Hide the base template aurora background */
+    .aurora-bg {
+        display: none !important;
+    }
+
+    /* Navbar Customization */
+    .navbar {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(0, 243, 255, 0.1) !important;
+        backdrop-filter: none !important;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute !important;
         top: 0;
         left: 0;
-        border-right: none;
-        border-bottom: none;
+        z-index: 1000;
     }
 
-    .holo-terminal::after {
-        bottom: 0;
-        right: 0;
-        border-left: none;
-        border-top: none;
+    .logo,
+    .nav-link {
+        color: #fff !important;
+        text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
     }
 
-    /* Scanner Animation for Avatar */
-    .avatar-scanner-container {
-        position: relative;
-        width: 160px;
-        height: 160px;
-        margin: 0 auto 24px;
-        border-radius: 50%;
-        padding: 4px;
-        background: linear-gradient(180deg, rgba(124, 77, 255, 0), rgba(124, 77, 255, 0.5));
+    .nav-btn {
+        background: transparent !important;
+        border: 1px solid var(--glow-color) !important;
+        color: var(--glow-color) !important;
     }
 
-    .scanner-ring {
-        position: absolute;
-        inset: -10px;
-        border: 1px dashed var(--accent-primary);
-        border-radius: 50%;
-        animation: rotateRing 10s linear infinite;
-        opacity: 0.5;
+    .nav-btn:hover {
+        background: var(--glow-color) !important;
+        color: #000 !important;
     }
 
-    .scanner-beam {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: linear-gradient(180deg, transparent 40%, var(--accent-primary) 50%, transparent 60%);
-        background-size: 200% 200%;
-        opacity: 0.2;
-        animation: scanDown 3s linear infinite;
-        pointer-events: none;
+    /* Dashboard Layout */
+    .dashboard-container {
+        width: 100%;
+        max-width: 900px;
+        animation: fadeIn 0.8s ease-out;
     }
 
-    @keyframes rotateRing {
+    @keyframes fadeIn {
         from {
-            transform: rotate(0deg);
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         to {
-            transform: rotate(360deg);
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
-    @keyframes scanDown {
-        0% {
-            background-position: 50% -100%;
-        }
-
-        100% {
-            background-position: 50% 200%;
-        }
+    /* Glass Cards */
+    .pro-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Data Fields */
-    .data-row {
+    .pro-card:hover {
+        box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
+        border-color: rgba(0, 243, 255, 0.6);
+    }
+
+    .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        font-family: monospace;
+        align-items: center;
+        background: rgba(0, 243, 255, 0.05);
     }
 
-    .data-label {
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        color: #fff;
+        text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    }
+
+    .card-body {
+        padding: 24px;
+        color: #fff;
+    }
+
+    /* Profile Header Section */
+    .profile-summary {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid var(--glow-color);
+        background: rgba(0, 0, 0, 0.3);
+        flex-shrink: 0;
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        font-size: 2.5rem;
+        color: var(--glow-color);
+        font-weight: 700;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    }
+
+    .user-info h2 {
+        margin: 0 0 8px 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .meta-info {
         color: var(--text-secondary);
+        font-size: 0.9rem;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    /* Bio Section */
+    .bio-section {
+        margin-top: 24px;
+    }
+
+    .bio-label {
+        font-size: 0.85rem;
         text-transform: uppercase;
-        font-size: 0.8rem;
+        letter-spacing: 1px;
+        color: var(--glow-color);
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .bio-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 16px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        background: transparent;
+        border-radius: 0;
+    }
+
+    .stat-item {
+        background: transparent;
+        padding: 20px;
+        text-align: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-item:last-child {
+        border-right: none;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-transform: uppercase;
         letter-spacing: 1px;
     }
 
-    .data-value {
-        color: #fff;
-        font-weight: 600;
-        text-align: right;
-    }
-
-    /* Bio Terminal */
-    .bio-terminal {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 16px;
-        border-radius: 4px;
-        font-family: 'Courier New', monospace;
-        color: var(--accent-primary);
-        font-size: 0.9rem;
-        min-height: 100px;
-        margin-top: 24px;
-        position: relative;
-    }
-
-    .bio-terminal::before {
-        content: 'DATA_LOG://USER_BIO';
-        position: absolute;
-        top: -10px;
-        left: 10px;
-        background: #0d0c22;
-        padding: 0 8px;
-        font-size: 0.7rem;
-        color: var(--text-muted);
-    }
-
-    /* Buttons */
-    .tech-btn {
-        background: transparent;
-        border: 1px solid var(--accent-secondary);
-        color: var(--accent-primary);
-        font-family: monospace;
-        text-transform: uppercase;
-        letter-spacing: 2px;
+    /* Action Buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 12px 24px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .tech-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: var(--accent-secondary);
-        transition: left 0.3s ease;
-        z-index: -1;
-        opacity: 0.2;
-    }
-
-    .tech-btn:hover::before {
-        left: 0;
-    }
-
-    .tech-btn:hover {
+    .btn-primary {
+        background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
         color: #fff;
-        text-shadow: 0 0 8px var(--accent-primary);
-        box-shadow: 0 0 15px rgba(124, 77, 255, 0.4);
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
     }
 
-    .tech-btn.danger {
-        border-color: var(--error);
-        color: var(--error);
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
     }
 
-    .tech-btn.danger::before {
-        background: var(--error);
+    /* Gradient Logout Button (Preserved as requested) */
+    .btn-grad {
+        background-image: linear-gradient(to right, #e52d27 0%, #b31217 51%, #e52d27 100%);
+        margin: 10px;
+        padding: 15px 45px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px rgba(229, 45, 39, 0.5);
+        border-radius: 10px;
+        display: block;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
     }
 
-    .tech-btn.danger:hover {
-        box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+    .btn-grad:hover {
+        background-position: right center;
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 0 30px rgba(229, 45, 39, 0.8);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .profile-summary {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-item {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Local Starfield -->
-<div id="profile-stars"
-    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;"></div>
+<div class="dashboard-container">
 
-<div class="glass-card narrow holo-terminal" style="max-width: 600px; padding: 40px;">
+    <!-- Profile Card -->
+    <div class="pro-card">
+        <div class="card-header">
+            <h1 class="card-title">Profile Settings</h1>
+            <span style="color:var(--text-secondary); font-size:0.9rem; font-family:monospace;">ID: {{ user.id }}</span>
+        </div>
 
-    <!-- Header / Avatar -->
-    <div class="text-center">
-        <div class="avatar-scanner-container">
-            <div class="scanner-ring"></div>
-            <div class="scanner-beam"></div>
-            {% if profile.photo %}
-            <img src="{{ profile.photo.url }}" alt="Avatar"
-                style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid rgba(255,255,255,0.1);">
-            {% else %}
-            <div
-                style="width:100%; height:100%; border-radius:50%; background:#1a1a2e; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:3rem; font-family:monospace;">
-                {{ user.username|first|upper }}
+        <div class="card-body">
+            <div class="profile-summary">
+                <div class="avatar-container">
+                    {% if profile.photo %}
+                    <img src="{{ profile.photo.url }}" class="avatar-img" alt="Profile">
+                    {% else %}
+                    <div class="avatar-placeholder">
+                        {{ user.username|first|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="user-info">
+                    <h2>{{ user.username }}</h2>
+                    <div class="meta-info">
+                        <span>{{ user.email }}</span>
+                        <span>•</span>
+                        <span>Joined {{ user.date_joined|date:"M Y" }}</span>
+                    </div>
+                </div>
             </div>
-            {% endif %}
-        </div>
 
-        <h1
-            style="font-family: monospace; text-transform: uppercase; font-size: 2rem; margin-bottom: 4px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3);">
-            CMD. {{ user.username }}
-        </h1>
-        <div
-            style="display:inline-block; padding: 4px 12px; border: 1px solid var(--success); color: var(--success); font-family: monospace; font-size: 0.75rem; border-radius: 4px; background: rgba(0,230,118,0.05);">
-            STATUS: ACTIVE
+            <div class="bio-section">
+                <label class="bio-label">About</label>
+                <div class="bio-text">
+                    {% if profile.bio %}
+                    {{ profile.bio }}
+                    {% else %}
+                    <span style="font-style:italic; color:var(--text-secondary);">No biography provided.</span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Data Grid -->
-    <div style="margin-top: 40px;">
-        <div class="data-row">
-            <span class="data-label">Contact Freq.</span>
-            <span class="data-value">{{ user.email|default:"N/A" }}</span>
+    <!-- Stats & Activity -->
+    <div class="pro-card">
+        <div class="card-header">
+            <h3 class="card-title">Activity Overview</h3>
         </div>
-        <div class="data-row">
-            <span class="data-label">Commission Date</span>
-            <span class="data-value">{{ profile.created_at|date:"Y.m.d" }}</span>
-        </div>
-        <div class="data-row">
-            <span class="data-label">Service Time</span>
-            <span class="data-value">{{ profile.created_at|timesince }}</span>
-        </div>
-        <div class="data-row" style="border-bottom:none;">
-            <span class="data-label">Classification</span>
-            <span class="data-value">CLASS_A PERSONNEL</span>
+        <div class="card-body" style="padding:0;">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">Active</div>
+                    <div class="stat-label">Status</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ user.date_joined|timesince }}</div>
+                    <div class="stat-label">Tenure</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Reputation</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Bio Log -->
-    <div class="bio-terminal">
-        {% if profile.bio %}
-        {{ profile.bio }}
-        {% else %}
-        > NO DATA LOG FOUND.
-        > UPLOAD BIOMETRICS TO INITIALIZE.
-        {% endif %}
-        <span class="typing-cursor">_</span>
-    </div>
-
-    <!-- Actions -->
-    <div style="display: flex; gap: 16px; margin-top: 32px; justify-content: center;">
-        <a href="{% url 'update_profile' %}" class="tech-btn" style="flex:1; text-align:center; text-decoration:none;">
-            MODIFY RECORD
+    <!-- Actions Area -->
+    <div style="display:flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 40px;">
+        <a href="{% url 'update_profile' %}" class="btn btn-primary" style="margin-bottom: 20px; width: 200px;">
+            Edit Profile
         </a>
-        <form method="post" action="{% url 'logout' %}" style="flex:1;">
+
+        <form method="post" action="{% url 'logout' %}" class="logout-anim-trigger">
             {% csrf_token %}
-            <button type="submit" class="tech-btn danger" style="width:100%;">
-                TERMINATE
+            <button type="submit" class="btn-grad" style="width: 200px;">
+                Sign Out
             </button>
         </form>
     </div>
 
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Starfield
-        const starContainer = document.getElementById('profile-stars');
-        for (let j = 0; j < 60; j++) {
-            const s = document.createElement('div');
-            const size = Math.random() * 2;
-            s.style.cssText = `
-                position: absolute;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                width: ${size}px; height: ${size}px;
-                background: rgba(255,255,255,0.2);
-                border-radius: 50%;
-                animation: pulseStar ${Math.random() * 4 + 2}s infinite alternate;
-            `;
-            starContainer.appendChild(s);
-        }
-
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes pulseStar { 0% { opacity: 0.1; } 100% { opacity: 0.5; } }
-            .typing-cursor { animation: blink 1s step-end infinite; }
-            @keyframes blink { 50% { opacity: 0; } }
-        `;
-        document.head.appendChild(style);
-    });
-</script>
 {% endblock %}

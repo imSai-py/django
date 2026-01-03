@@ -1,186 +1,276 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Initialize Identity | Profile Manager{% endblock %}
+{% block title %}Register | Professional Access{% endblock %}
 
 {% block extra_head %}
 <style>
-    /* Tech Terminal Theme */
-    .holo-terminal {
+    /* Professional Blue/Glow Theme */
+    :root {
+        --glow-color: #00f3ff;
+        /* Cyan/Electric Blue Glow */
+        --bg-overlay: rgba(0, 0, 0, 0.75);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --text-color: #ffffff;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        /* Add padding to body so card doesn't touch edges on small screens */
+        font-family: 'Inter', sans-serif;
+        background: url("{% static 'register_bg.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding-top: 80px;
+        /* Prevent navbar overlap */
+        /* Allow scrolling if content is taller */
+        /* height: 100vh; Removed to prevent clipping */
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        /* Fixes layout: Navbar tops, content centers/stacks */
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    /* Hide the base template aurora background */
+    .aurora-bg {
+        display: none !important;
+    }
+
+    /* Navbar Customization for this page */
+    .navbar {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(0, 243, 255, 0.1) !important;
+        backdrop-filter: none !important;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .logo,
+    .nav-link {
+        color: #fff !important;
+        text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    }
+
+    .nav-btn {
+        background: transparent !important;
+        border: 1px solid var(--glow-color) !important;
+        color: var(--glow-color) !important;
+    }
+
+    .nav-btn:hover {
+        background: var(--glow-color) !important;
+        color: #000 !important;
+    }
+
+    /* The Glowing Form Container */
+    .register-card {
+        background: rgba(0, 10, 20, 0.6);
+        /* More transparent to merge with bg */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        width: 100%;
+        max-width: 480px;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2),
+            0 0 40px rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--glow-color);
+        /* The requested glowing border */
+        animation: cardEntry 0.8s ease-out forwards, borderPulse 3s infinite alternate;
         position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(124, 77, 255, 0.3);
-        background: rgba(13, 12, 34, 0.7);
-        /* Darker, tech feel */
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     }
 
-    /* Decoration: Corner Brackets */
-    .holo-terminal::before,
-    .holo-terminal::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        border: 2px solid var(--accent-secondary);
-        transition: all 0.3s ease;
-    }
-
-    .holo-terminal::before {
-        top: 0;
-        left: 0;
-        border-right: none;
-        border-bottom: none;
-    }
-
-    .holo-terminal::after {
-        bottom: 0;
-        right: 0;
-        border-left: none;
-        border-top: none;
-    }
-
-    .holo-terminal:hover::before,
-    .holo-terminal:hover::after {
-        width: 30px;
-        height: 30px;
-        border-color: var(--accent-primary);
-        box-shadow: 0 0 10px var(--accent-primary);
-    }
-
-    /* Scanline Effect */
-    .scanline {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(to right, transparent, var(--accent-primary), transparent);
-        opacity: 0.5;
-        animation: scan 3s linear infinite;
-        pointer-events: none;
-    }
-
-    @keyframes scan {
-        0% {
-            top: -10%;
-            opacity: 0;
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+        .register-card {
+            padding: 20px;
+            max-width: 100%;
         }
 
-        50% {
-            opacity: 1;
+        .register-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+
+    /* Glowing Border Animation */
+    @keyframes borderPulse {
+        0% {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            border-color: rgba(0, 243, 255, 0.6);
         }
 
         100% {
-            top: 110%;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.6), 0 0 10px rgba(0, 243, 255, 0.4) inset;
+            border-color: rgba(0, 243, 255, 1);
+        }
+    }
+
+    @keyframes cardEntry {
+        from {
             opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
-    /* Tech Inputs */
-    .tech-input {
-        background: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #fff !important;
-        font-family: 'Inter', monospace;
-        /* Clean but structured */
-        padding-left: 16px;
+    .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+        letter-spacing: 1px;
+    }
+
+    .register-header p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        margin-top: 10px;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .pro-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--input-bg);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: #fff;
+        font-size: 1rem;
         transition: all 0.3s ease;
+        outline: none;
     }
 
-    .tech-input:focus {
-        border-color: var(--accent-primary) !important;
-        box-shadow: 0 0 15px rgba(124, 77, 255, 0.2), inset 0 0 10px rgba(124, 77, 255, 0.1) !important;
-        background: rgba(124, 77, 255, 0.05) !important;
+    .pro-input:focus {
+        background: rgba(0, 243, 255, 0.1);
+        border-color: var(--glow-color);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
     }
 
-    /* Layout */
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+    .pro-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
     }
 
-    .full-width {
-        grid-column: 1 / -1;
-    }
-
-    @media (max-width: 600px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* Strength Meter (Cyberpunk Style) */
-    .strength-meter {
-        height: 2px;
-        background: #333;
+    .error-msg {
+        color: #ff4d4d;
+        font-size: 0.8rem;
         margin-top: 5px;
-        display: none;
+        display: block;
     }
 
-    .strength-meter-bar {
-        height: 100%;
-        box-shadow: 0 0 10px currentColor;
-        /* Glow */
+    /* Register Button */
+    .btn-register {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+    }
+
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
+    }
+
+    .btn-register:active {
+        transform: translateY(0);
+    }
+
+    /* Footer Links */
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .auth-link {
+        color: var(--glow-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+    .auth-link:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    /* Custom hidden scrollbar for form if needed */
+    .register-card::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Local Starfield -->
-<div id="register-stars"
-    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;"></div>
-
-<div class="glass-card narrow holo-terminal" style="max-width: 700px;">
-
-    <!-- Decorative Scanline -->
-    <div class="scanline"></div>
-
-    <div class="text-center mb-4">
-        <div style="font-size: 2.5rem; margin-bottom: 8px;">🚀</div>
-        <h2 style="font-family: monospace; letter-spacing: -1px; text-transform: uppercase;">
-            Initialize <span class="text-gradient">Identity</span>
-        </h2>
-        <p style="color: var(--text-secondary); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">
-            System Ready // Awaiting User Input
-        </p>
+<div class="register-card">
+    <div class="register-header">
+        <h1>Create Account</h1>
+        <p>Join our professional network today</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" novalidate id="registerForm">
+    <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
-        <div class="form-grid">
-            {% for field in form %}
-            <div class="form-group {% if field.name == 'bio' or field.name == 'photo' %}full-width{% endif %}">
-                <label class="form-label" for="{{ field.id_for_label }}"
-                    style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
-                    {{ field.label }}
-                </label>
-                {{ field }}
-                {% if field.help_text %}
-                <small style="display:block; margin-top:4px; color:var(--text-muted); font-size:0.75rem;">{{
-                    field.help_text }}</small>
-                {% endif %}
-                {% if field.errors %}
-                <div style="color:var(--error); font-size:0.8rem; margin-top:4px;">
-                    {% for error in field.errors %}{{ error }} {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            {% endfor %}
+        {% for field in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <span class="error-msg">{{ field.errors.0 }}</span>
+            {% endif %}
         </div>
+        {% endfor %}
 
-        <button type="submit" class="nav-btn primary btn-block"
-            style="height: 54px; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px;">
-            Launch Profile
+        <button type="submit" class="btn-register">
+            Register
         </button>
     </form>
 
-    <div style="margin-top: 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
-        <span style="color: var(--text-muted); font-size: 0.9rem;">Already active?</span>
-        <a href="{% url 'login' %}" style="color: var(--accent-primary); margin-left:8px; font-weight:600;">RESUME
-            SESSION</a>
+    <div class="auth-footer">
+        Already have an account?
+        <a href="{% url 'login' %}" class="auth-link">Sign In</a>
     </div>
 </div>
 {% endblock %}
@@ -188,73 +278,13 @@
 {% block extra_scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Tech Input Styling
-        const inputs = document.querySelectorAll('input, textarea, select');
-        inputs.forEach(i => {
-            i.classList.add('tech-input');
-            i.classList.remove('form-input'); // Remove default glass style to avoid conflict
-
-            // Placeholders
-            if (i.name.includes('username')) i.placeholder = 'CODENAME...';
-            if (i.name.includes('email')) i.placeholder = 'CONTACT@FREQUENCY.COM';
-            if (i.name.includes('password')) i.placeholder = '********';
-            if (i.name.includes('bio')) i.placeholder = 'DATA LOG...';
+        // Apply professional styling classes toward Django rendered inputs
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.classList.add('pro-input');
+            // Clean up any old classes if Django adds them by default
+            input.classList.remove('form-control');
         });
-
-        // Starfield logic (Simpler version for this page)
-        const starContainer = document.getElementById('register-stars');
-        for (let j = 0; j < 100; j++) {
-            const s = document.createElement('div');
-            const size = Math.random() * 2;
-            s.style.cssText = `
-                position: absolute;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                width: ${size}px; height: ${size}px;
-                background: rgba(255,255,255,0.4);
-                border-radius: 50%;
-                animation: twinkle ${Math.random() * 3 + 2}s infinite alternate;
-            `;
-            starContainer.appendChild(s);
-        }
-
-        // Add Twinkle Keyframe
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes twinkle { from { opacity: 0.2; } to { opacity: 0.8; } }`;
-        document.head.appendChild(style);
-
-        // Strength Meter Logic (Adapted for Cyberpunk)
-        const passwordInput = document.querySelector('input[name*="password"]:not([name*="confirmation"])');
-        if (passwordInput) {
-            const meter = document.createElement('div');
-            meter.className = 'strength-meter';
-            meter.innerHTML = '<div class="strength-meter-bar"></div>';
-            passwordInput.parentNode.appendChild(meter);
-            const bar = meter.querySelector('.strength-meter-bar');
-
-            passwordInput.addEventListener('input', function () {
-                meter.style.display = 'block';
-                const val = this.value;
-                let strength = 0;
-                if (val.length >= 8) strength += 1;
-                if (val.match(/[A-Z]/)) strength += 1;
-                if (val.match(/[0-9]/)) strength += 1;
-                if (val.match(/[^a-zA-Z0-9]/)) strength += 1;
-
-                let width = '0%';
-                let color = 'var(--error)';
-
-                if (strength === 0) width = '0%';
-                else if (strength <= 1) { width = '25%'; color = '#ff3d00'; } // Red
-                else if (strength === 2) { width = '50%'; color = '#ffd600'; } // Yellow
-                else if (strength === 3) { width = '75%'; color = '#00e676'; } // Green
-                else { width = '100%'; color = '#00e676'; } // Green
-
-                bar.style.width = width;
-                bar.style.backgroundColor = color;
-                bar.style.boxShadow = `0 0 10px ${color}`;
-            });
-        }
     });
 </script>
 {% endblock %}

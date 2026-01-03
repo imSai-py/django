@@ -1,34 +1,184 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Update Profile | Profile Manager{% endblock %}
+{% block title %}Settings | Edit Profile{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Professional Design System (Matches Profile Page) */
+    :root {
+        --bg-color: #000000;
+        --card-bg: #111111;
+        --border-color: #333333;
+        --accent: #3291ff;
+        --text-primary: #ededed;
+        --text-secondary: #888888;
+        --input-bg: #111;
+        --input-border: #444;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        background-image: linear-gradient(to bottom, #111 0%, #000 100%);
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .settings-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Page Header */
+    .page-header {
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 16px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    /* Form Styling */
+    .settings-form {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+    }
+
+    .form-control {
+        width: 100%;
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        transition: border-color 0.15s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    /* File Input Styling */
+    input[type="file"] {
+        border: 1px dashed var(--border-color);
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+    }
+
+    /* Helper Text */
+    .help-text {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    /* Buttons */
+    .btn-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: #fff;
+        color: #000;
+        border: 1px solid #fff;
+    }
+
+    .btn-primary:hover {
+        background: #e6e6e6;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        border-color: #666;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="glass-card narrow" style="max-width: 600px;">
-    <h2 class="text-center mb-4">Edit Profile</h2>
+<div class="settings-container">
 
-    <form method="post" enctype="multipart/form-data" novalidate>
+    <div class="page-header">
+        <h1 class="page-title">General Settings</h1>
+        <p class="page-subtitle">Update your personal information and profile details.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="settings-form">
         {% csrf_token %}
 
-        <!-- Reuse form styling via simpler loop or manual field render if needed for specific layout -->
+        <!-- Render form fields manually for control or loop cleanly -->
         {% for field in form %}
         <div class="form-group">
-            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <label class="form-label" for="{{ field.id_for_label }}">
+                {{ field.label }}
+            </label>
+
+            <!-- Add class form-control to standard inputs -->
             {{ field }}
+
             {% if field.help_text %}
-            <small style="display:block; margin-top:4px; color:var(--text-muted);">{{ field.help_text }}</small>
+            <span class="help-text">{{ field.help_text }}</span>
             {% endif %}
+
             {% if field.errors %}
-            <div style="color:var(--error); margin-top:4px;">
-                {% for error in field.errors %}{{ error }}{% endfor %}
+            <div style="margin-top:5px; color:#ff4444; font-size:0.85rem;">
+                {{ field.errors.0 }}
             </div>
             {% endif %}
         </div>
         {% endfor %}
 
-        <div style="display: flex; gap: 16px; margin-top: 32px;">
-            <button type="submit" class="nav-btn primary" style="flex: 1;">Save Changes</button>
-            <a href="{% url 'profile' %}" class="nav-btn"
-                style="flex: 1; text-align: center; background: rgba(255,255,255,0.05);">Cancel</a>
+        <div class="btn-row">
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
 </div>
@@ -37,8 +187,13 @@
 {% block extra_scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const inputs = document.querySelectorAll('input, textarea, select');
-        inputs.forEach(i => i.classList.add('form-input'));
+        // Apply professional class to Django rendered inputs
+        const inputs = document.querySelectorAll('input:not([type="file"]):not([type="checkbox"]), textarea, select');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+            // Remove any old flashy classes if they persisted
+            input.classList.remove('vice-input', 'tech-input');
+        });
     });
 </script>
 {% endblock %}
