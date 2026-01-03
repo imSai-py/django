@@ -42,20 +42,24 @@ def setup():
         print(f"Superuser '{username}' already exists. Skipping.")
 
     # 3. Configure Google SocialApp Placeholder
-    # This prevents crashes if the app is missing. 
-    # USER MUST UPDATE THIS IN ADMIN WITH REAL KEYS.
-    print("Configuring Google SocialApp placeholder...")
-    app, app_created = SocialApp.objects.update_or_create(
-        provider='google',
-        defaults={
-            'name': 'Google',
-            'client_id': 'ENTER_CLIENT_ID_IN_ADMIN',
-            'secret': 'ENTER_SECRET_KEY_IN_ADMIN'
-        }
-    )
-    # Ensure it's connected to our site
-    app.sites.add(site)
-    print("Google SocialApp placeholder configured.")
+    # We use get_or_create (or check existence) so we DON'T overwrite 
+    # the real keys you added in Admin on every deploy!
+    print("Checking Google SocialApp...")
+    if not SocialApp.objects.filter(provider='google').exists():
+        print("Creating Google SocialApp placeholder...")
+        app = SocialApp.objects.create(
+            provider='google',
+            name='Google',
+            client_id='ENTER_CLIENT_ID_IN_ADMIN',
+            secret='ENTER_SECRET_KEY_IN_ADMIN'
+        )
+        app.sites.add(site)
+        print("Google SocialApp placeholder created.")
+    else:
+        print("Google SocialApp already exists. Keeping your keys safe!")
+        # Ensure it is attached to the current site (just in case)
+        app = SocialApp.objects.get(provider='google')
+        app.sites.add(site)
     
     print("--- Setup Complete ---")
 
