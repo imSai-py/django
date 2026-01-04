@@ -66,11 +66,34 @@
         color: #000 !important;
     }
 
+    /* Override .main-content from base template for perfect centering */
+    .main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        box-sizing: border-box !important;
+    }
+
     /* Dashboard Layout */
     .dashboard-container {
         width: 100%;
         max-width: 900px;
         animation: fadeIn 0.8s ease-out;
+        box-sizing: border-box;
+        padding: 0 20px;
+        padding-bottom: 60px;
+        /* Ensure content doesn't look cut off on mobile */
+    }
+
+    /* Universal box-sizing for all dashboard elements */
+    .dashboard-container *,
+    .dashboard-container *::before,
+    .dashboard-container *::after {
+        box-sizing: border-box;
     }
 
     @keyframes fadeIn {
@@ -96,6 +119,8 @@
         margin-bottom: 30px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-sizing: border-box;
+        width: 100%;
     }
 
     .pro-card:hover {
@@ -110,6 +135,8 @@
         justify-content: space-between;
         align-items: center;
         background: rgba(0, 243, 255, 0.05);
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .card-title {
@@ -173,6 +200,7 @@
         display: flex;
         gap: 16px;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     /* Bio Section */
@@ -198,6 +226,8 @@
         padding: 16px;
         border-radius: 6px;
         border: 1px solid rgba(255, 255, 255, 0.1);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     /* Stats Grid */
@@ -248,6 +278,8 @@
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        box-sizing: border-box;
+        max-width: 100%;
     }
 
     .btn-primary {
@@ -262,46 +294,207 @@
         box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
     }
 
-    /* Gradient Logout Button (Preserved as requested) */
-    .btn-grad {
-        background-image: linear-gradient(to right, #e52d27 0%, #b31217 51%, #e52d27 100%);
+    /* Outlined Sign Out Button (Visible against dark background) */
+    .btn-signout {
+        background: transparent;
         margin: 10px;
-        padding: 15px 45px;
+        padding: 12px 24px;
         text-align: center;
         text-transform: uppercase;
-        transition: 0.5s;
-        background-size: 200% auto;
-        color: white;
-        box-shadow: 0 0 20px rgba(229, 45, 39, 0.5);
-        border-radius: 10px;
-        display: block;
-        border: none;
+        transition: all 0.3s ease;
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        font-weight: 700;
-        font-size: 0.9rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+        max-width: 100%;
+        letter-spacing: 0.5px;
     }
 
-    .btn-grad:hover {
-        background-position: right center;
+    .btn-signout:hover {
+        background: rgba(255, 255, 255, 0.05);
         color: #fff;
-        text-decoration: none;
-        box-shadow: 0 0 30px rgba(229, 45, 39, 0.8);
+        border-color: rgba(255, 255, 255, 0.5);
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
+    /* Subtle Danger Link (for Delete Account) */
+    .link-danger {
+        background: none;
+        border: none;
+        color: rgba(255, 100, 100, 0.6);
+        font-size: 0.8rem;
+        font-weight: 400;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        padding: 8px 0;
+        margin-top: 30px;
+    }
+
+    .link-danger:hover {
+        color: #ff6666;
+        text-decoration: underline;
+    }
+
+    /* Bio Empty State */
+    .bio-empty-state {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--text-secondary);
+        font-style: italic;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 20px;
+    }
+
+    .bio-empty-state:hover {
+        color: var(--glow-color);
+    }
+
+    .bio-empty-state svg {
+        width: 16px;
+        height: 16px;
+        opacity: 0.7;
+    }
+
+    .bio-empty-state:hover svg {
+        opacity: 1;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        body {
+            padding: 1rem;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Ensure main-content doesn't overflow on mobile */
+        .main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            overflow: visible !important;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: calc(100% - 0rem);
+            padding: 0 0.5rem;
+        }
+
+        .pro-card {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 16px;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
         .profile-summary {
             flex-direction: column;
             text-align: center;
         }
 
+        .user-info h2 {
+            font-size: 1.5rem;
+        }
+
+        .meta-info {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Keep stats horizontal even on mobile for dashboard look */
         .stats-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .stat-item {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: none;
+            padding: 15px 10px;
+        }
+
+        .stat-item:last-child {
             border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+        }
+    }
+
+    /* Extra small screens (phones in portrait) */
+    @media (max-width: 480px) {
+        body {
+            padding: 0.5rem;
+            padding-top: 70px;
+        }
+
+        .dashboard-container {
+            padding: 0 0.25rem;
+        }
+
+        .card-header {
+            padding: 12px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card-body {
+            padding: 12px;
+        }
+
+        .avatar-container {
+            width: 80px;
+            height: 80px;
+        }
+
+        .avatar-placeholder {
+            font-size: 2rem;
+        }
+
+        .user-info h2 {
+            font-size: 1.3rem;
+        }
+
+        .bio-text {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+        }
+
+        .btn-grad {
+            padding: 12px 30px;
+            font-size: 0.85rem;
         }
     }
 </style>
@@ -314,7 +507,7 @@
     <div class="pro-card">
         <div class="card-header">
             <h1 class="card-title">Profile Settings</h1>
-            <span style="color:var(--text-secondary); font-size:0.9rem; font-family:monospace;">ID: {{ user.id }}</span>
+            <!-- ID hidden for cleaner look -->
         </div>
 
         <div class="card-body">
@@ -345,7 +538,13 @@
                     {% if profile.bio %}
                     {{ profile.bio }}
                     {% else %}
-                    <span style="font-style:italic; color:var(--text-secondary);">No biography provided.</span>
+                    <a href="{% url 'update_profile' %}" class="bio-empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                        <span>Tell us about yourself...</span>
+                    </a>
                     {% endif %}
                 </div>
             </div>
@@ -383,15 +582,14 @@
 
         <form method="post" action="{% url 'logout' %}" class="logout-anim-trigger">
             {% csrf_token %}
-            <button type="submit" class="btn-grad" style="width: 200px;">
+            <button type="submit" class="btn-signout" style="width: 200px;">
                 Sign Out
             </button>
         </form>
 
-        <form method="post" action="{% url 'delete_account' %}" style="margin-top: 20px;">
+        <form method="post" action="{% url 'delete_account' %}" style="margin-top: 30px;">
             {% csrf_token %}
-            <button type="submit" class="btn"
-                style="width: 200px; background: rgba(255, 0, 0, 0.2); border: 1px solid red; color: red;"
+            <button type="submit" class="link-danger"
                 onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
                 Delete Account
             </button>

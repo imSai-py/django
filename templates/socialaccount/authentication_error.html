@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Account Not Found{% endblock %}
+{% block title %}Login Error | Professional Access{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -60,8 +60,8 @@
         color: var(--glow-color) !important;
     }
 
-    /* Message Card */
-    .msg-card {
+    /* Error Card */
+    .error-card {
         background: rgba(0, 10, 20, 0.6);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
@@ -69,20 +69,20 @@
         max-width: 500px;
         padding: 40px;
         border-radius: 12px;
-        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        border: 2px solid var(--glow-color);
+        box-shadow: 0 0 20px rgba(255, 77, 77, 0.2),
+            0 0 40px rgba(0, 0, 0, 0.5);
+        border: 2px solid #ff4d4d;
+        /* Red border for error */
         text-align: center;
-        animation: cardEntry 0.8s ease-out forwards;
+        animation: cardEntry 0.8s ease-out forwards, borderPulseError 3s infinite alternate;
         box-sizing: border-box;
-        /* Critical for mobile */
         overflow: hidden;
-        /* Prevent children from overflowing */
     }
 
     /* Universal box-sizing for all card elements */
-    .msg-card *,
-    .msg-card *::before,
-    .msg-card *::after {
+    .error-card *,
+    .error-card *::before,
+    .error-card *::after {
         box-sizing: border-box;
     }
 
@@ -102,20 +102,16 @@
     @media (max-width: 768px) {
         body {
             padding: 1rem;
-            /* Consistent side padding to prevent border cutoff */
             padding-top: 70px;
-            /* Account for navbar */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Perfect horizontal centering */
             overflow-x: hidden;
             width: 100%;
             box-sizing: border-box;
         }
 
-        /* Ensure main-content doesn't overflow on mobile */
         .main-content {
             width: 100% !important;
             max-width: 100% !important;
@@ -125,15 +121,11 @@
             overflow: visible !important;
         }
 
-        .msg-card {
+        .error-card {
             width: 90%;
-            /* Fit within viewport with breathing room */
             max-width: calc(100% - 2rem);
-            /* Ensure space for neon border glow */
             padding: 25px 20px;
-            /* Reduced internal padding */
             margin: 1rem auto;
-            /* Centered with vertical margin */
         }
 
         h1 {
@@ -145,16 +137,15 @@
         }
     }
 
-    /* Extra small screens (phones in portrait) */
+    /* Extra small screens */
     @media (max-width: 480px) {
         body {
             padding: 0.75rem;
             padding-top: 65px;
         }
 
-        .msg-card {
+        .error-card {
             width: 92%;
-            /* Slightly more width on small screens */
             max-width: calc(100% - 1.5rem);
             padding: 20px 16px;
             margin: 0.75rem auto;
@@ -186,11 +177,28 @@
         }
     }
 
+    @keyframes borderPulseError {
+        0% {
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.2);
+            border-color: rgba(255, 77, 77, 0.6);
+        }
+
+        100% {
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.6), 0 0 10px rgba(255, 77, 77, 0.4) inset;
+            border-color: rgba(255, 77, 77, 1);
+        }
+    }
+
+    .error-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
     h1 {
         color: #fff;
         font-size: 2rem;
         margin-bottom: 15px;
-        text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+        text-shadow: 0 0 10px rgba(255, 77, 77, 0.8);
     }
 
     p {
@@ -198,6 +206,12 @@
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 30px;
+    }
+
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
 
     .btn-action {
@@ -215,7 +229,6 @@
         transition: transform 0.2s, box-shadow 0.2s;
         box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
         box-sizing: border-box;
-        /* Prevent overflow on mobile */
         max-width: 100%;
     }
 
@@ -225,20 +238,39 @@
         color: #fff;
         text-decoration: none;
     }
+
+    .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--glow-color);
+        color: var(--glow-color);
+        box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(0, 243, 255, 0.1);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 243, 255, 0.2);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="msg-card">
-    <h1>Account Not Found</h1>
+<div class="error-card">
+    <div class="error-icon">⚠️</div>
+    <h1>Third-Party Login Failed</h1>
     <p>
-        We couldn't find an account associated with this Google email.
+        An error occurred while attempting to login via your third-party account.
         <br>
-        Please create an account to get started.
+        Please try again or use a different login method.
     </p>
 
-    <a href="{% url 'register' %}" class="btn-action">
-        Create Account
-    </a>
+    <div class="btn-group">
+        <a href="{% url 'login' %}" class="btn-action">
+            Try Again
+        </a>
+        <a href="{% url 'register' %}" class="btn-action btn-secondary">
+            Create Account
+        </a>
+    </div>
 </div>
 {% endblock %}

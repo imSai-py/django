@@ -24,6 +24,24 @@
     display: flex !important;
     flex-direction: column !important;
     align-items: center;
+    padding-bottom: 80px;
+    /* Ensure content isn't cut off at bottom */
+  }
+
+  /* Profiles Section */
+  .profiles-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .section-title {
+    margin-top: 50px;
+    /* Space between CTA button and this section */
+    margin-bottom: 30px;
+    text-align: center;
   }
 
   /* Hide the base template aurora background */
@@ -158,19 +176,20 @@
     transform: scale(0.9) translateX(50px);
     z-index: 1;
     overflow: hidden;
-    /* Contain overlays and long text */
 
-    /* Inherit the Tech Card Styling */
-    background: rgba(15, 20, 35, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 4px;
+    /* Glass Panel Styling - Neon Cyan Theme */
+    background: rgba(0, 10, 20, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
     padding: 40px 30px;
     text-align: center;
     color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
 
-    /* Corner Brackets (Four Line Border) - Premium Gold */
-    --b-color: #D4AF37;
+    /* Corner Brackets - Neon Cyan */
+    --b-color: #00f3ff;
     --b-width: 2px;
     --b-size: 30px;
     background-image:
@@ -192,7 +211,18 @@
     pointer-events: auto;
     transform: scale(1) translateX(0);
     z-index: 10;
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 50px rgba(0, 243, 255, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 243, 255, 0.6);
+  }
+
+  /* Swipe Hint Text - Bright Cyan */
+  .swipe-hint {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: #00f3ff;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
   }
 
   /* Click Zones */
@@ -222,7 +252,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 2rem;
-    color: rgba(212, 175, 55, 0.3);
+    color: rgba(0, 243, 255, 0.3);
     pointer-events: none;
     transition: all 0.3s;
   }
@@ -236,8 +266,9 @@
   }
 
   .nav-zone:hover .nav-hint {
-    color: rgba(212, 175, 55, 1);
+    color: rgba(0, 243, 255, 1);
     transform: translateY(-50%) scale(1.2);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
   }
 
   .profile-avatar {
@@ -246,7 +277,7 @@
     border-radius: 50%;
     margin: 0 auto 25px;
     border: 3px solid var(--b-color);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
     object-fit: cover;
     display: flex;
     align-items: center;
@@ -368,8 +399,7 @@
 
       <h3 class="profile-name">{{ profile.user.username }}</h3>
       <div class="profile-meta">Joined {{ profile.user.date_joined|date:"F Y" }}</div>
-      <div style="margin-top:20px; font-size:0.8rem; color:var(--b-color); opacity:0.6; letter-spacing:1px;">SWIPE OR
-        TAP SIDES</div>
+      <div class="swipe-hint">SWIPE OR TAP SIDES</div>
     </div>
     {% empty %}
     <div style="text-align:center; color:white; padding:40px;">No profiles found yet.</div>
